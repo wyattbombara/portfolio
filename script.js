@@ -173,6 +173,10 @@ if (el) {
     'probably pentesting something',
     'prob coding an exploit',
     'automating the boring stuff',
+    'making computers do what I want',
+    'writing code that probably works',
+    'figuring it out as I go',
+    'code, monster, chaos',
   ];
   let pi = 0, ci = 0, deleting = false;
 
