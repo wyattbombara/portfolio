@@ -35,10 +35,26 @@ function updateUI(data) {
   const spotifyEl = document.getElementById('spotify');
   if (spotifyEl) {
     if (data.spotify) {
+      const s = data.spotify;
       spotifyEl.innerHTML = `
-        <span class="spotify-icon playing">&#9835;</span>
-        <span class="spotify-text">listening to <strong>${data.spotify.song}</strong> by ${data.spotify.artist}</span>
+        <div class="spotify-cover">
+          <img src="${s.album_art_url}" alt="" width="40" height="40">
+        </div>
+        <div class="spotify-body">
+          <div class="spotify-text">
+            <span class="spotify-icon playing">&#9835;</span>
+            <strong>${s.song}</strong> &middot; ${s.artist}
+          </div>
+          <div class="spotify-bar" data-start="${s.timestamps.start}" data-end="${s.timestamps.end}">
+            <div class="spotify-progress"></div>
+          </div>
+          <div class="spotify-times">
+            <span class="spotify-current">0:00</span>
+            <span class="spotify-duration">${fmtTime(s.timestamps.end - s.timestamps.start)}</span>
+          </div>
+        </div>
       `;
+      updateProgress();
     } else {
       spotifyEl.innerHTML = `
         <span class="spotify-icon">&#9835;</span>
@@ -46,6 +62,24 @@ function updateUI(data) {
       `;
     }
   }
+}
+
+function fmtTime(ms) {
+  const s = Math.floor(ms / 1000);
+  return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+}
+
+function updateProgress() {
+  const bar = document.querySelector('.spotify-bar');
+  if (!bar) return;
+  const start = parseInt(bar.dataset.start);
+  const end = parseInt(bar.dataset.end);
+  const elapsed = Date.now() - start;
+  const pct = Math.min((elapsed / (end - start)) * 100, 100);
+  bar.querySelector('.spotify-progress').style.width = pct + '%';
+  const cur = bar.parentElement.querySelector('.spotify-current');
+  if (cur) cur.textContent = fmtTime(elapsed);
+  requestAnimationFrame(updateProgress);
 }
 
 connectLanyard();
