@@ -2,42 +2,53 @@
 const _ = [49, 48, 57, 57, 56, 49, 56, 56, 49, 55, 57, 51, 52, 51, 51, 49, 57, 49, 52].map(c => String.fromCharCode(c)).join('');
 const DISCORD_ID = _;
 
-// --- fetch status from lanyard ---
-async function fetchStatus() {
-  if (!DISCORD_ID) return;
+// --- lanyard websocket ---
+let ws;
 
-  try {
-    const res = await fetch('https://api.lanyard.rest/v1/users/' + DISCORD_ID);
-    const json = await res.json();
-    const data = json.data;
+function connectLanyard() {
+  if (ws) ws.close();
+  ws = new WebSocket('wss://api.lanyard.rest/socket');
 
-    // status dot
-    const dot = document.querySelector('.status-dot');
-    if (dot) {
-      const colors = { online: '#22c55e', idle: '#f59e0b', dnd: '#ef4444', offline: '#555' };
-      dot.style.background = colors[data.discord_status] || '#555';
+  ws.onopen = () => {
+    ws.send(JSON.stringify({ op: 2, d: { subscribe_to_id: DISCORD_ID } }));
+  };
+
+  ws.onmessage = (e) => {
+    const msg = JSON.parse(e.data);
+    if (msg.op === 0) {
+      updateUI(msg.d);
     }
+  };
 
-    // spotify
-    const spotifyEl = document.getElementById('spotify');
-    if (spotifyEl) {
-      if (data.spotify) {
-        spotifyEl.innerHTML = `
-          <span class="spotify-icon playing">&#9835;</span>
-          <span class="spotify-text">listening to <strong>${data.spotify.song}</strong> by ${data.spotify.artist}</span>
-        `;
-      } else {
-        spotifyEl.innerHTML = `
-          <span class="spotify-icon">&#9835;</span>
-          <span class="spotify-text">not playing anything</span>
-        `;
-      }
-    }
-  } catch {}
+  ws.onclose = () => setTimeout(connectLanyard, 5000);
 }
 
-fetchStatus();
-setInterval(fetchStatus, 30000);
+function updateUI(data) {
+  // status dot
+  const dot = document.querySelector('.status-dot');
+  if (dot) {
+    const colors = { online: '#22c55e', idle: '#f59e0b', dnd: '#ef4444', offline: '#555' };
+    dot.style.background = colors[data.discord_status] || '#555';
+  }
+
+  // spotify
+  const spotifyEl = document.getElementById('spotify');
+  if (spotifyEl) {
+    if (data.spotify) {
+      spotifyEl.innerHTML = `
+        <span class="spotify-icon playing">&#9835;</span>
+        <span class="spotify-text">listening to <strong>${data.spotify.song}</strong> by ${data.spotify.artist}</span>
+      `;
+    } else {
+      spotifyEl.innerHTML = `
+        <span class="spotify-icon">&#9835;</span>
+        <span class="spotify-text">not playing anything</span>
+      `;
+    }
+  }
+}
+
+connectLanyard();
 
 // theme toggle
 const toggle = document.getElementById('themeToggle');
