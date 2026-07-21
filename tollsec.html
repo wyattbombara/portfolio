@@ -4,8 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>tollsec</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>T</text></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28' fill='%2322c55e'>T</text></svg>">
   <link rel="stylesheet" href="style.css">
+  <style>
+    .page { --accent: #22c55e; }
+    .glitch { color: var(--accent) !important; }
+    .glitch::before { color: #f00; }
+    .glitch::after { color: #0ff; }
+    .terminal { border-color: #1a3a1a; }
+    .terminal-bar { background: #0d1a0d; }
+    .terminal-bar span:nth-child(1) { background: #ff5f56; }
+    .terminal-bar span:nth-child(2) { background: #ffbd2e; }
+    .terminal-bar span:nth-child(3) { background: #27c93f; }
+    .ds-logo { width: 80px; height: 80px; margin: 0 auto 1rem; border: 2px solid var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; animation: pulseGreen 2s ease-in-out infinite; }
+    .ds-logo::before { content: ''; position: absolute; inset: 4px; border: 1px solid var(--accent); border-radius: 50%; opacity: 0.3; }
+    .ds-logo span { font-size: 1.6rem; font-weight: 700; color: var(--accent); font-family: 'SFMono-Regular', Consolas, monospace; letter-spacing: 0.05em; }
+    @keyframes pulseGreen { 0%, 100% { box-shadow: 0 0 8px rgba(34,197,94,0.2); } 50% { box-shadow: 0 0 20px rgba(34,197,94,0.4); } }
+    body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 999; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(34,197,94,0.015) 2px, rgba(34,197,94,0.015) 4px); }
+  </style>
 </head>
 <body>
   <div class="page">
@@ -23,10 +39,11 @@
 
     <main>
       <div class="card" style="text-align: center;">
-        <div class="glitch" data-text="tollsec" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; transition: color 0.3s;">tollsec</div>
-        <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.7; margin-bottom: 1rem; transition: color 0.3s;">hacktivist group. we break things that should stay broken.</p>
-        <p style="color: var(--text-dim); font-size: 0.78rem; font-style: italic; margin-bottom: 1rem; transition: color 0.3s;">we only react when the rules start failing us</p>
-        <a href="#" class="btn" style="display: inline-block;">join us?</a>
+        <div class="ds-logo"><span>T</span></div>
+        <div class="glitch" data-text="tollsec" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.75rem;">tollsec</div>
+        <p style="color: var(--text-muted); font-size: 0.82rem; line-height: 1.7; margin-bottom: 0.75rem;">we are everywhere. you just don't see us.</p>
+        <p style="color: var(--text-dim); font-size: 0.75rem; font-style: italic; margin-bottom: 1rem;">the system is broken — we're just the ones who know it.</p>
+        <a href="#" class="btn" style="display: inline-block; border-color: var(--accent); color: var(--accent);">join us?</a>
       </div>
 
       <div class="terminal">
@@ -35,11 +52,12 @@
           <span class="terminal-title">tollsec@gateway:~</span>
         </div>
         <div class="terminal-body">
-          <div class="terminal-line"><span class="prompt">root@tollsec:~$</span> ./status --live</div>
-          <div class="terminal-line"><span class="output">[+] gateway online</span></div>
-          <div class="terminal-line"><span class="output">[+] encrypted tunnels: 4 active</span></div>
-          <div class="terminal-line"><span class="output">[+] nodes: 12 reachable</span></div>
-          <div class="terminal-line"><span class="output">[+] last op: 3d 14h ago — success</span></div>
+          <div class="terminal-line"><span class="prompt">root@tollsec:~$</span> ./dedsec --status</div>
+          <div class="terminal-line"><span class="output">[+] 12 nodes active — mesh encrypted</span></div>
+          <div class="terminal-line"><span class="output">[+] 4 active operations in progress</span></div>
+          <div class="terminal-line"><span class="output">[+] trace status: <span style="color:#22c55e;">clean</span></span></div>
+          <div class="terminal-line"><span class="output">[+] last breach: 2h 17m ago — target: compromised</span></div>
+          <div class="terminal-line"><span class="output">[+] member count: 18</span></div>
           <div class="terminal-line"><span class="prompt">root@tollsec:~$</span> <span class="cursor">_</span></div>
         </div>
       </div>
@@ -47,8 +65,8 @@
 
     <div class="footer-clock" id="footerClock"></div>
 
-    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.7rem; color: var(--text-dim);">
-      <a href="index.html" style="color: var(--bg);">.</a>
+    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.7rem;">
+      <a href="index.html" style="color: var(--accent); opacity: 0.3;">.</a>
     </div>
   </div>
 
