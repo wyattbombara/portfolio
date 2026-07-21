@@ -61,7 +61,6 @@ function updateUI(data) {
       updateProgress();
     }
     if (game) {
-      console.log('game activity:', game);
       let imgUrl = '';
       if (game.assets?.large_image && game.application_id) {
         const img = game.assets.large_image;
@@ -71,6 +70,20 @@ function updateUI(data) {
           imgUrl = `https://cdn.discordapp.com/app-assets/${game.application_id}/${img}.png`;
         }
       }
+      if (!imgUrl) {
+        const icons = { 'ROBLOX': 'https://cdn.discordapp.com/app-icons/363445589247131668/f2b60e350a2097289b3b0b877495e55f.png' };
+        if (icons[game.name]) imgUrl = icons[game.name];
+      }
+      if (!imgUrl && game.application_id && !window._gameIcons?.[game.application_id]) {
+        if (!window._gameIcons) window._gameIcons = {};
+        fetch(`https://discord.com/api/v10/applications/${game.application_id}/rpc`)
+          .then(r => r.json()).then(d => {
+            if (d.icon) {
+              window._gameIcons[game.application_id] = `https://cdn.discordapp.com/app-icons/${game.application_id}/${d.icon}.png`;
+            }
+          }).catch(() => {});
+      }
+      if (!imgUrl) imgUrl = window._gameIcons?.[game.application_id];
       const elapsed = game.timestamps ? Date.now() - game.timestamps.start : 0;
       html += `
         <div class="game-row">
