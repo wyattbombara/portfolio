@@ -527,3 +527,67 @@ main {
     padding: 1.25rem;
   }
 }
+
+.terminal {
+  background: #0a0a0a;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.78rem;
+  animation: cardIn 0.5s ease 0.1s both;
+}
+
+.terminal-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #111;
+  border-bottom: 1px solid var(--border);
+}
+
+.terminal-bar span:not(.terminal-title) {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.terminal-bar span:nth-child(1) { background: #ff5f56; }
+.terminal-bar span:nth-child(2) { background: #ffbd2e; }
+.terminal-bar span:nth-child(3) { background: #27c93f; }
+
+.terminal-title {
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}
+
+.terminal-body {
+  padding: 12px;
+  line-height: 1.7;
+}
+
+.terminal-line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.prompt {
+  color: #22c55e;
+}
+
+.output {
+  color: var(--text-muted);
+}
+
+.output .highlight {
+  color: var(--text-secondary);
+}
+
+.cursor {
+  animation: blink 0.8s step-end infinite;
+  color: var(--text);
+}
