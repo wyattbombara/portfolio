@@ -171,6 +171,7 @@ if (el) {
     'breaking things for fun',
     'hacktivist at heart',
     'probably pentesting something',
+    'probably doing something sketchy',
     'prob coding an exploit',
     'automating the boring stuff',
     'making computers do what I want',
