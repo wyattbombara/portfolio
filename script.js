@@ -31,36 +31,51 @@ function updateUI(data) {
     dot.style.background = colors[data.discord_status] || '#555';
   }
 
-  // spotify
+  // spotify + game
   const spotifyEl = document.getElementById('spotify');
   if (spotifyEl) {
+    const game = data.activities?.find(a => a.type === 0);
+    let html = '';
     if (data.spotify) {
       const s = data.spotify;
-      spotifyEl.innerHTML = `
-        <div class="spotify-cover">
-          <img src="${s.album_art_url}" alt="" width="110" height="110">
-        </div>
-        <div class="spotify-body">
-          <div class="spotify-text">
-            <span class="spotify-icon playing">&#9835;</span>
-            <strong>${s.song}</strong> &middot; ${s.artist}
+      html = `
+        <div class="spotify-row">
+          <div class="spotify-cover">
+            <img src="${s.album_art_url}" alt="" width="110" height="110">
           </div>
-          <div class="spotify-bar" data-start="${s.timestamps.start}" data-end="${s.timestamps.end}">
-            <div class="spotify-progress"></div>
-          </div>
-          <div class="spotify-times">
-            <span class="spotify-current">0:00</span>
-            <span class="spotify-duration">${fmtTime(s.timestamps.end - s.timestamps.start)}</span>
+          <div class="spotify-body">
+            <div class="spotify-text">
+              <span class="spotify-icon playing">&#9835;</span>
+              <strong>${s.song}</strong> &middot; ${s.artist}
+            </div>
+            <div class="spotify-bar" data-start="${s.timestamps.start}" data-end="${s.timestamps.end}">
+              <div class="spotify-progress"></div>
+            </div>
+            <div class="spotify-times">
+              <span class="spotify-current">0:00</span>
+              <span class="spotify-duration">${fmtTime(s.timestamps.end - s.timestamps.start)}</span>
+            </div>
           </div>
         </div>
       `;
       updateProgress();
-    } else {
-      spotifyEl.innerHTML = `
+    }
+    if (game) {
+      html += `
+        <div class="game-info">
+          <span class="game-icon">&#127918;</span>
+          <span class="game-name">${game.name}</span>
+          ${game.details ? `<span class="game-details">${game.details}</span>` : ''}
+        </div>
+      `;
+    }
+    if (!data.spotify && !game) {
+      html = `
         <span class="spotify-icon">&#9835;</span>
         <span class="spotify-text">not playing anything</span>
       `;
     }
+    spotifyEl.innerHTML = html;
   }
 }
 
