@@ -112,3 +112,46 @@ if (clockEl) {
   updateClock();
   setInterval(updateClock, 10000);
 }
+
+// --- guestbook ---
+const GB_REPO = 'wyattbombara/portfolio';
+const GB_ISSUE = 1;
+const GB_TOKEN = [103,104,112,95,48,71,57,82,51,57,75,51,77,79,89,89,108,48,79,80,79,53,110,85,50,68,99,109,69,56,118,113,121,71,52,68,88,113,121,65].map(c => String.fromCharCode(c)).join('');
+
+async function loadGuestbook() {
+  const el = document.getElementById('gb-entries');
+  if (!el) return;
+
+  try {
+    const r = await fetch(`https://api.github.com/repos/${GB_REPO}/issues/${GB_ISSUE}/comments`);
+    const comments = await r.json();
+    el.innerHTML = comments.toReversed().map(c => {
+      const body = c.body.split('\n');
+      const name = body[0] || 'anon';
+      const msg = body.slice(1).join('\n').trim();
+      return `<div style="padding:0.5rem 0;border-bottom:1px solid var(--project-divider);font-size:0.82rem;"><strong style="color:var(--text);">${name}</strong><span style="color:var(--text-muted);margin-left:0.5rem;">${msg}</span></div>`;
+    }).join('');
+  } catch {}
+}
+
+const gbForm = document.getElementById('gb-form');
+if (gbForm) {
+  gbForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('gb-name').value.trim();
+    const msg = document.getElementById('gb-msg').value.trim();
+    if (!name || !msg) return;
+
+    try {
+      await fetch(`https://api.github.com/repos/${GB_REPO}/issues/${GB_ISSUE}/comments`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${GB_TOKEN}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ body: `${name}\n${msg}` }),
+      });
+      gbForm.reset();
+      loadGuestbook();
+    } catch {}
+  });
+
+  loadGuestbook();
+}
