@@ -53,13 +53,13 @@ body {
   line-height: 1.6;
   background: var(--bg);
   color: var(--text);
-  animation: fadeIn 0.3s ease;
+  animation: fadeIn 0.4s ease;
   transition: background 0.3s, color 0.3s;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 a {
@@ -331,6 +331,61 @@ main {
 
 .theme-toggle:hover {
   color: var(--nav-hover);
+}
+
+/* glitch effect for tollsec */
+
+.card {
+  animation: cardIn 0.5s ease both;
+}
+
+.card:nth-child(2) { animation-delay: 0.1s; }
+.card:nth-child(3) { animation-delay: 0.2s; }
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.glitch {
+  position: relative;
+  display: inline-block;
+  animation: glitch 3s infinite;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.glitch::before {
+  color: #f00;
+  animation: glitchShift 3s infinite;
+  clip-path: inset(20% 0 60% 0);
+}
+
+.glitch::after {
+  color: #0ff;
+  animation: glitchShift 3s infinite reverse;
+  clip-path: inset(60% 0 20% 0);
+}
+
+@keyframes glitch {
+  2%, 64% { transform: skew(0); }
+  4% { transform: skew(-1deg); }
+  6% { transform: skew(1deg); }
+  8% { transform: skew(0); }
+}
+
+@keyframes glitchShift {
+  2%, 64% { opacity: 0; }
+  4% { opacity: 1; }
+  6% { opacity: 0; }
 }
 
 @media (max-width: 480px) {

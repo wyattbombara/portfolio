@@ -116,7 +116,6 @@ if (clockEl) {
 // --- guestbook ---
 const GB_REPO = 'wyattbombara/portfolio';
 const GB_ISSUE = 1;
-const GB_TOKEN = [103,104,112,95,48,71,57,82,51,57,75,51,77,79,89,89,108,48,79,80,79,53,110,85,50,68,99,109,69,56,118,113,121,71,52,68,88,113,121,65].map(c => String.fromCharCode(c)).join('');
 
 async function loadGuestbook() {
   const el = document.getElementById('gb-entries');
@@ -141,16 +140,8 @@ if (gbForm) {
     const name = document.getElementById('gb-name').value.trim();
     const msg = document.getElementById('gb-msg').value.trim();
     if (!name || !msg) return;
-
-    try {
-      await fetch(`https://api.github.com/repos/${GB_REPO}/issues/${GB_ISSUE}/comments`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${GB_TOKEN}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ body: `${name}\n${msg}` }),
-      });
-      gbForm.reset();
-      loadGuestbook();
-    } catch {}
+    window.open(`https://github.com/${GB_REPO}/issues/new?title=guestbook:+${encodeURIComponent(name)}&body=${encodeURIComponent(msg)}`, '_blank');
+    gbForm.reset();
   });
 
   loadGuestbook();
