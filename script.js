@@ -16,7 +16,6 @@ function connectLanyard() {
   ws.onmessage = (e) => {
     const msg = JSON.parse(e.data);
     if (msg.op === 0) {
-      console.log('lanyard data:', msg.d);
       updateUI(msg.d);
     }
   };
