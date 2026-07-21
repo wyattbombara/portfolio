@@ -61,6 +61,7 @@ function updateUI(data) {
       updateProgress();
     }
     if (game) {
+      console.log('game activity:', game);
       let imgUrl = '';
       if (game.assets?.large_image && game.application_id) {
         const img = game.assets.large_image;
