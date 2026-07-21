@@ -373,19 +373,32 @@ main {
 }
 
 .game-icon {
-  font-size: 1rem;
+  font-size: 0.9rem;
   flex-shrink: 0;
+}
+
+.game-body {
+  flex: 1;
+  min-width: 0;
 }
 
 .game-name {
   color: var(--text-secondary);
   font-weight: 500;
+  font-size: 0.85rem;
 }
 
 .game-details {
   color: var(--text-dim);
-  font-size: 0.78rem;
-  margin-left: 0.25rem;
+  font-size: 0.75rem;
+  margin-top: 0.1rem;
+}
+
+.game-clock {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
 }
 
 .visitor-count {

@@ -61,11 +61,15 @@ function updateUI(data) {
       updateProgress();
     }
     if (game) {
+      const elapsed = game.timestamps ? Date.now() - game.timestamps.start : 0;
       html += `
         <div class="game-info">
-          <span class="game-icon">&#127918;</span>
-          <span class="game-name">${game.name}</span>
-          ${game.details ? `<span class="game-details">${game.details}</span>` : ''}
+          <div class="game-icon">&#127918;</div>
+          <div class="game-body">
+            <div class="game-name">${game.name}</div>
+            ${game.details ? `<div class="game-details">${game.details}${game.state ? ' &middot; ' + game.state : ''}</div>` : ''}
+          </div>
+          ${game.timestamps ? `<div class="game-clock" data-start="${game.timestamps.start}">${fmtTime(elapsed)}</div>` : ''}
         </div>
       `;
     }
@@ -86,14 +90,20 @@ function fmtTime(ms) {
 
 function updateProgress() {
   const bar = document.querySelector('.spotify-bar');
-  if (!bar) return;
-  const start = parseInt(bar.dataset.start);
-  const end = parseInt(bar.dataset.end);
-  const elapsed = Date.now() - start;
-  const pct = Math.min((elapsed / (end - start)) * 100, 100);
-  bar.querySelector('.spotify-progress').style.width = pct + '%';
-  const cur = bar.parentElement.querySelector('.spotify-current');
-  if (cur) cur.textContent = fmtTime(elapsed);
+  if (bar) {
+    const start = parseInt(bar.dataset.start);
+    const end = parseInt(bar.dataset.end);
+    const elapsed = Date.now() - start;
+    const pct = Math.min((elapsed / (end - start)) * 100, 100);
+    bar.querySelector('.spotify-progress').style.width = pct + '%';
+    const cur = bar.parentElement.querySelector('.spotify-current');
+    if (cur) cur.textContent = fmtTime(elapsed);
+  }
+  const gc = document.querySelector('.game-clock');
+  if (gc) {
+    const start = parseInt(gc.dataset.start);
+    gc.textContent = fmtTime(Date.now() - start);
+  }
   requestAnimationFrame(updateProgress);
 }
 
