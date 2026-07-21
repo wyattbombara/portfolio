@@ -172,6 +172,7 @@ if (el) {
     'hacktivist at heart',
     'probably pentesting something',
     'prob coding an exploit',
+    'automating the boring stuff',
   ];
   let pi = 0, ci = 0, deleting = false;
 
