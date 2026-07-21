@@ -1,5 +1,6 @@
 // --- config ---
-const DISCORD_ID = '1099818817934331914';
+const _ = [49, 48, 57, 57, 56, 49, 56, 56, 49, 55, 57, 51, 52, 51, 51, 49, 57, 49, 52].map(c => String.fromCharCode(c)).join('');
+const DISCORD_ID = _;
 
 // --- fetch status from lanyard ---
 async function fetchStatus() {
