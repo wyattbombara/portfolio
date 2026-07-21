@@ -184,7 +184,7 @@ if (el) {
     'I do stuff sometimes',
     "not sure what I'm doing, but it's fine",
   ];
-  let pi = 0, ci = 0, deleting = false;
+  let pi = Math.floor(Math.random() * phrases.length), ci = 0, deleting = false;
 
   function type() {
     const text = phrases[pi];
@@ -201,7 +201,9 @@ if (el) {
       ci--;
       if (ci === 0) {
         deleting = false;
-        pi = (pi + 1) % phrases.length;
+        let np;
+        do { np = Math.floor(Math.random() * phrases.length); } while (np === pi);
+        pi = np;
         setTimeout(type, 200);
         return;
       }
