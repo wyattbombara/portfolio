@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wyatt</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>W</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+    <nav>
+      <a href="#" class="logo">wyatt</a>
+      <div class="nav-links">
+        <a href="now.html">now</a>
+        <a href="uses.html">uses</a>
+        <a href="skills.html">skills</a>
+        <a href="pentest.html">pentest</a>
+        <button class="theme-toggle" id="themeToggle">light</button>
+      </div>
+    </nav>
+
+    <main>
+      <div class="card">
+        <h1>wyatt <span class="status-dot"></span></h1>
+        <p class="bio"><span id="typing-text"></span><span class="typing-cursor"></span></p>
+        <p class="desc">built a proxy site, host my own ai, pick up whatever tech seems useful</p>
+        <div class="spotify" id="spotify">
+          <span class="spotify-icon">&#9835;</span>
+          <span class="spotify-text">not playing anything</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>projects</h2>
+        <div class="project">
+          <div class="project-title">tms site</div>
+          <div class="project-desc">modified web proxy + game site — browse and play from places that block stuff</div>
+          <div class="tags">
+            <span>Node.js</span>
+            <span>Bare Server</span>
+          </div>
+        </div>
+        <div class="project">
+          <div class="project-title">school ai</div>
+          <div class="project-desc">custom ai assistant hosted locally via OpenRui, available through tms</div>
+          <div class="tags">
+            <span>OpenRui</span>
+            <span>LLM</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card contact">
+        <a href="mailto:wyattbombara3@gmail.com" class="btn">email me</a>
+      </div>
+    </main>
+
+    <div class="visitor-count" id="visitorCount"></div>
+
+    <div class="footer-clock" id="footerClock"></div>
+
+    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.7rem; color: var(--text-dim);">
+      <a href="tollsec.html" style="color: inherit;">.</a>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
