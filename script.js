@@ -38,7 +38,7 @@ function updateUI(data) {
       const s = data.spotify;
       spotifyEl.innerHTML = `
         <div class="spotify-cover">
-          <img src="${s.album_art_url}" alt="" width="80" height="80">
+          <img src="${s.album_art_url}" alt="" width="100" height="100">
         </div>
         <div class="spotify-body">
           <div class="spotify-text">
