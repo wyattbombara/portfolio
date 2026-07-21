@@ -178,6 +178,11 @@ if (el) {
     'writing code that probably works',
     'figuring it out as I go',
     'code, monster, chaos',
+    "for legal reasons, that's a joke",
+    'doing stuff, idk yet',
+    'probably should be sleeping',
+    'I do stuff sometimes',
+    "not sure what I'm doing, but it's fine",
   ];
   let pi = 0, ci = 0, deleting = false;
 
