@@ -140,6 +140,9 @@ if (toggle) {
     document.documentElement.setAttribute('data-theme', 'light');
     toggle.textContent = 'dark';
   }
+  // set initial cusdis theme
+  const cusdis = document.querySelector('#cusdis_thread');
+  if (cusdis) cusdis.setAttribute('data-theme', saved === 'light' ? 'light' : 'dark');
 
   toggle.addEventListener('click', () => {
     const isLight = document.documentElement.getAttribute('data-theme') === 'light';
@@ -151,6 +154,12 @@ if (toggle) {
       document.documentElement.setAttribute('data-theme', 'light');
       toggle.textContent = 'dark';
       localStorage.setItem('theme', 'light');
+    }
+    // update cusdis theme
+    const cusdis = document.querySelector('#cusdis_thread');
+    if (cusdis) {
+      cusdis.setAttribute('data-theme', isLight ? 'dark' : 'light');
+      if (window.CUSDIS) window.CUSDIS.renderTo(cusdis);
     }
   });
 }
@@ -193,38 +202,4 @@ if (clockEl) {
   }
   updateClock();
   setInterval(updateClock, 10000);
-}
-
-// --- guestbook ---
-const GB_REPO = 'wyattbombara/portfolio';
-const GB_ISSUE = 1;
-
-async function loadGuestbook() {
-  const el = document.getElementById('gb-entries');
-  if (!el) return;
-
-  try {
-    const r = await fetch(`https://api.github.com/repos/${GB_REPO}/issues/${GB_ISSUE}/comments`);
-    const comments = await r.json();
-    el.innerHTML = comments.toReversed().map(c => {
-      const body = c.body.split('\n');
-      const name = body[0] || 'anon';
-      const msg = body.slice(1).join('\n').trim();
-      return `<div style="padding:0.5rem 0;border-bottom:1px solid var(--project-divider);font-size:0.82rem;"><strong style="color:var(--text);">${name}</strong><span style="color:var(--text-muted);margin-left:0.5rem;">${msg}</span></div>`;
-    }).join('');
-  } catch {}
-}
-
-const gbForm = document.getElementById('gb-form');
-if (gbForm) {
-  gbForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('gb-name').value.trim();
-    const msg = document.getElementById('gb-msg').value.trim();
-    if (!name || !msg) return;
-    window.open(`https://github.com/${GB_REPO}/issues/new?title=guestbook:+${encodeURIComponent(name)}&body=${encodeURIComponent(msg)}`, '_blank');
-    gbForm.reset();
-  });
-
-  loadGuestbook();
 }
