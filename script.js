@@ -1,27 +1,36 @@
 // --- config ---
-const API_URL = ''; // set to http://your-pi-ip:3001 when live
+const DISCORD_ID = '1099818817934331914';
 
-// --- fetch status from api ---
+// --- fetch status from lanyard ---
 async function fetchStatus() {
-  if (!API_URL) return;
+  if (!DISCORD_ID) return;
 
   try {
-    const res = await fetch(API_URL + '/api/status');
-    const data = await res.json();
+    const res = await fetch('https://api.lanyard.rest/v1/users/' + DISCORD_ID);
+    const json = await res.json();
+    const data = json.data;
 
     // status dot
     const dot = document.querySelector('.status-dot');
     if (dot) {
-      dot.style.background = data.status === 'online' ? '#22c55e' : '#555';
+      const colors = { online: '#22c55e', idle: '#f59e0b', dnd: '#ef4444', offline: '#555' };
+      dot.style.background = colors[data.discord_status] || '#555';
     }
 
     // spotify
     const spotifyEl = document.getElementById('spotify');
-    if (spotifyEl && data.spotify?.song) {
-      spotifyEl.innerHTML = `
-        <span class="spotify-icon playing">&#9835;</span>
-        <span class="spotify-text">listening to <strong>${data.spotify.song}</strong></span>
-      `;
+    if (spotifyEl) {
+      if (data.spotify) {
+        spotifyEl.innerHTML = `
+          <span class="spotify-icon playing">&#9835;</span>
+          <span class="spotify-text">listening to <strong>${data.spotify.song}</strong> by ${data.spotify.artist}</span>
+        `;
+      } else {
+        spotifyEl.innerHTML = `
+          <span class="spotify-icon">&#9835;</span>
+          <span class="spotify-text">not playing anything</span>
+        `;
+      }
     }
   } catch {}
 }
