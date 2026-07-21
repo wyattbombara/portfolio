@@ -61,10 +61,19 @@ function updateUI(data) {
       updateProgress();
     }
     if (game) {
+      let imgUrl = '';
+      if (game.assets?.large_image && game.application_id) {
+        const img = game.assets.large_image;
+        if (img.startsWith('external:')) {
+          imgUrl = 'https://media.discordapp.net/external/' + encodeURIComponent(img.slice(9));
+        } else if (!img.startsWith('spotify:')) {
+          imgUrl = `https://cdn.discordapp.com/app-assets/${game.application_id}/${img}.png`;
+        }
+      }
       const elapsed = game.timestamps ? Date.now() - game.timestamps.start : 0;
       html += `
-        <div class="game-info">
-          <div class="game-icon">&#127918;</div>
+        <div class="game-row">
+          ${imgUrl ? `<div class="spotify-cover"><img src="${imgUrl}" alt="" width="40" height="40" onerror="this.parentElement.innerHTML='<span class=game-icon>&#127918;</span>'"></div>` : `<div class="game-icon">&#127918;</div>`}
           <div class="game-body">
             <div class="game-name">${game.name}</div>
             ${game.details ? `<div class="game-details">${game.details}${game.state ? ' &middot; ' + game.state : ''}</div>` : ''}
