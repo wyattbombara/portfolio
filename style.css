@@ -55,6 +55,7 @@ body {
   color: var(--text);
   animation: fadeIn 0.4s ease;
   transition: background 0.3s, color 0.3s;
+  position: relative;
 }
 
 @keyframes fadeIn {
@@ -67,7 +68,19 @@ a {
   color: inherit;
 }
 
+#particle-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
 .page {
+  position: relative;
+  z-index: 1;
   max-width: 620px;
   margin: 0 auto;
   padding: 2rem 1.5rem;

@@ -203,3 +203,41 @@ if (clockEl) {
   updateClock();
   setInterval(updateClock, 10000);
 }
+
+// particle background
+(function() {
+  const c = document.createElement('canvas');
+  c.id = 'particle-canvas';
+  document.body.prepend(c);
+  const ctx = c.getContext('2d');
+  let particles = [];
+  const COUNT = 60;
+
+  function resize() { c.width = innerWidth; c.height = innerHeight; }
+  resize();
+  addEventListener('resize', resize);
+
+  for (let i = 0; i < COUNT; i++) {
+    particles.push({
+      x: Math.random() * c.width,
+      y: Math.random() * c.height,
+      r: Math.random() * 2 + 1,
+      dy: Math.random() * 0.3 + 0.1,
+      o: Math.random() * 0.5 + 0.1,
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, c.width, c.height);
+    for (const p of particles) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200,200,200,${p.o})`;
+      ctx.fill();
+      p.y += p.dy;
+      if (p.y > c.height + 5) { p.y = -5; p.x = Math.random() * c.width; }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
