@@ -168,7 +168,7 @@ if (toggle) {
 const el = document.getElementById('typing-text');
 if (el) {
   const phrases = [
-    'breaks things for fun',
+    'breaking things for fun',
     'hacktivist at heart',
     'probably pentesting something',
     'prob coding an exploit',
