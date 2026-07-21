@@ -167,13 +167,34 @@ if (toggle) {
 // typing effect
 const el = document.getElementById('typing-text');
 if (el) {
-  const text = 'does stuff with code';
-  let i = 0;
+  const phrases = [
+    'breaks things for fun',
+    'hacktivist at heart',
+    'probably pentesting something',
+    'prob coding an exploit',
+  ];
+  let pi = 0, ci = 0, deleting = false;
+
   function type() {
-    if (i < text.length) {
-      el.textContent += text.charAt(i);
-      i++;
-      setTimeout(type, 50);
+    const text = phrases[pi];
+    if (!deleting) {
+      el.textContent = text.slice(0, ci + 1);
+      ci++;
+      if (ci === text.length) {
+        setTimeout(() => { deleting = true; setTimeout(type, 300); }, 2000);
+        return;
+      }
+      setTimeout(type, 60);
+    } else {
+      el.textContent = text.slice(0, ci - 1);
+      ci--;
+      if (ci === 0) {
+        deleting = false;
+        pi = (pi + 1) % phrases.length;
+        setTimeout(type, 200);
+        return;
+      }
+      setTimeout(type, 30);
     }
   }
   type();
