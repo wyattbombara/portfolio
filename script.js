@@ -179,21 +179,14 @@ if (el) {
   type();
 }
 
-// visit counter (once per tab session)
+// visit counter
 const counter = document.getElementById('visitorCount');
 if (counter) {
-  if (!localStorage.getItem('_v2')) {
-    localStorage.setItem('visits', '0');
-    localStorage.setItem('_v2', '1');
-  }
   const key = 'visits';
-  if (!sessionStorage.getItem('_counted')) {
-    let count = localStorage.getItem(key);
-    count = count ? parseInt(count) + 1 : 1;
-    localStorage.setItem(key, count);
-    sessionStorage.setItem('_counted', '1');
-  }
-  counter.textContent = 'visits: ' + (localStorage.getItem(key) || 0);
+  let count = localStorage.getItem(key);
+  count = count ? parseInt(count) + 1 : 1;
+  localStorage.setItem(key, count);
+  counter.textContent = 'visits: ' + count;
 }
 
 // footer clock
