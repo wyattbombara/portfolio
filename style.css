@@ -127,6 +127,15 @@ nav {
   padding: 0;
 }
 
+.nav-cat::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 12px;
+}
+
 .nav-cat:hover {
   color: var(--nav-hover);
 }
@@ -134,10 +143,9 @@ nav {
 .nav-cat-drop {
   display: none;
   position: absolute;
-  top: 100%;
+  top: calc(100% + 12px);
   left: 50%;
   transform: translateX(-50%);
-  margin-top: 0.5rem;
   background: var(--tag-bg);
   border: 1px solid var(--border);
   border-radius: 6px;
