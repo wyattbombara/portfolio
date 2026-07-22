@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>proxy — Wyatt</title>
+  <meta property="og:title" content="proxy — Wyatt">
+  <meta property="og:description" content="barebones web proxy">
+  <meta property="og:url" content="https://wyattbombara.github.io/portfolio/proxy.html">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>W</text></svg>">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .proxy-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .proxy-bar input {
+      flex: 1;
+      padding: 0.5rem 0.75rem;
+      background: var(--tag-bg);
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .proxy-bar input:focus {
+      border-color: var(--hover-border);
+    }
+    .proxy-bar .btn {
+      padding: 0.4rem 1rem;
+    }
+    #proxyFrame {
+      width: 100%;
+      height: 60vh;
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <nav>
+      <a href="index.html" class="logo">wyatt</a>
+      <div class="nav-links">
+        <a href="now.html">now</a>
+        <a href="uses.html">uses</a>
+        <a href="skills.html">skills</a>
+        <a href="accomplishments.html">accomplishments</a>
+        <a href="guestbook.html">guestbook</a>
+        <a href="pentest.html">pentest</a>
+        <button class="theme-toggle" id="themeToggle">light</button>
+      </div>
+    </nav>
+
+    <main>
+      <div class="card">
+        <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem;">proxy</div>
+        <div class="proxy-bar">
+          <input type="text" id="proxyUrl" placeholder="enter URL..." autocomplete="off" spellcheck="false">
+          <button class="btn" id="proxyGo">go</button>
+        </div>
+        <iframe id="proxyFrame" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+        <div style="font-size: 0.7rem; color: var(--text-dim); margin-top: 0.5rem; text-align: center;">backend: tms proxy</div>
+      </div>
+    </main>
+
+    <div class="footer-clock" id="footerClock"></div>
+
+    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.7rem; color: var(--text-dim);">
+      <a href="tollsec.html" style="color: var(--bg);">.</a>
+    </div>
+  </div>
+
+  <script>
+    const input = document.getElementById('proxyUrl');
+    const go = document.getElementById('proxyGo');
+    const frame = document.getElementById('proxyFrame');
+
+    function navigate() {
+      let url = input.value.trim();
+      if (!url) return;
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+      }
+      frame.src = 'https://corsproxy.io/?' + encodeURIComponent(url);
+    }
+
+    go.addEventListener('click', navigate);
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigate(); });
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>
