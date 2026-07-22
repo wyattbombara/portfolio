@@ -287,7 +287,6 @@ if (clockEl) {
     guestbook: { path: 'guestbook.html', desc: 'sign the guestbook' },
     pentest: { path: 'pentest.html', desc: 'pen testing experience' },
     proxy: { path: 'proxy.html', desc: 'barebones web proxy' },
-    tollsec: { path: 'tollsec.html', desc: 'hacktivist group' },
   };
 
   function buildOverlay() {
@@ -377,6 +376,8 @@ if (clockEl) {
       addOutput('wyatt &mdash; hacktivist, developer, pentester');
     } else if (pages[main]) {
       window.location.href = pages[main].path;
+    } else if (main === 'tollsec') {
+      window.location.href = 'tollsec.html';
     } else {
       addOutput(`<span class="error">unknown command: ${escapeHtml(main)}</span>`);
     }
