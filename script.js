@@ -6,7 +6,6 @@ const DISCORD_ID = _;
 const settings = {
   navMode: localStorage.getItem('navMode') || 'terminal',
   particles: localStorage.getItem('particles') !== 'off',
-  spotifyEnabled: localStorage.getItem('spotifyEnabled') !== 'off',
   visitorEnabled: localStorage.getItem('visitorEnabled') !== 'off',
 };
 
@@ -62,11 +61,6 @@ function connectLanyard() {
 }
 
 function updateUI(data) {
-  if (!settings.spotifyEnabled) {
-    const se = document.getElementById('spotify');
-    if (se) se.style.display = 'none';
-    return;
-  }
   const spotifyEl = document.getElementById('spotify');
   if (spotifyEl) {
     const game = data.activities?.find(a => a.type === 0);
@@ -273,44 +267,53 @@ if (clockEl) {
 }
 
 // particle background
-if (settings.particles) {
-  (function() {
-    const c = document.createElement('canvas');
-    c.id = 'particle-canvas';
-    document.body.prepend(c);
-    const ctx = c.getContext('2d');
-    let particles = [];
-    const COUNT = 60;
+let particleAnimId = null;
 
-    function resize() { c.width = innerWidth; c.height = innerHeight; }
-    resize();
-    addEventListener('resize', resize);
+function startParticles() {
+  if (document.getElementById('particle-canvas')) return;
+  const c = document.createElement('canvas');
+  c.id = 'particle-canvas';
+  document.body.prepend(c);
+  const ctx = c.getContext('2d');
+  let particles = [];
+  const COUNT = 60;
 
-    for (let i = 0; i < COUNT; i++) {
-      particles.push({
-        x: Math.random() * c.width,
-        y: Math.random() * c.height,
-        r: Math.random() * 2 + 1,
-        dy: Math.random() * 0.3 + 0.1,
-        o: Math.random() * 0.5 + 0.1,
-      });
+  function resize() { c.width = innerWidth; c.height = innerHeight; }
+  resize();
+  addEventListener('resize', resize);
+
+  for (let i = 0; i < COUNT; i++) {
+    particles.push({
+      x: Math.random() * c.width,
+      y: Math.random() * c.height,
+      r: Math.random() * 2 + 1,
+      dy: Math.random() * 0.3 + 0.1,
+      o: Math.random() * 0.5 + 0.1,
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, c.width, c.height);
+    for (const p of particles) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200,200,200,${p.o})`;
+      ctx.fill();
+      p.y += p.dy;
+      if (p.y > c.height + 5) { p.y = -5; p.x = Math.random() * c.width; }
     }
-
-    function draw() {
-      ctx.clearRect(0, 0, c.width, c.height);
-      for (const p of particles) {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(200,200,200,${p.o})`;
-        ctx.fill();
-        p.y += p.dy;
-        if (p.y > c.height + 5) { p.y = -5; p.x = Math.random() * c.width; }
-      }
-      requestAnimationFrame(draw);
-    }
-    draw();
-  })();
+    particleAnimId = requestAnimationFrame(draw);
+  }
+  draw();
 }
+
+function stopParticles() {
+  const c = document.getElementById('particle-canvas');
+  if (c) c.remove();
+  if (particleAnimId) cancelAnimationFrame(particleAnimId);
+}
+
+if (settings.particles) startParticles();
 
 // terminal navigation
 (function() {
