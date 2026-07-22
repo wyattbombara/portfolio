@@ -111,18 +111,26 @@
         if (!container) return;
         const mode = getVal('navMode');
         if (mode === 'tabs') {
-          const pages = [
-            { n: 'now', p: 'now.html' }, { n: 'uses', p: 'uses.html' },
-            { n: 'skills', p: 'skills.html' }, { n: 'accomplishments', p: 'accomplishments.html' },
-            { n: 'guestbook', p: 'guestbook.html' }, { n: 'pentest', p: 'pentest.html' },
-            { n: 'proxy', p: 'proxy.html' }, { n: 'settings', p: 'settings.html' },
+          const cats = [
+            { label: 'about', pages: [{ n: 'now', p: 'now.html' }, { n: 'uses', p: 'uses.html' }] },
+            { label: 'abilities', pages: [{ n: 'skills', p: 'skills.html' }, { n: 'accomplishments', p: 'accomplishments.html' }] },
+            { label: 'interact', pages: [{ n: 'guestbook', p: 'guestbook.html' }, { n: 'pentest', p: 'pentest.html' }, { n: 'proxy', p: 'proxy.html' }, { n: 'settings', p: 'settings.html' }] },
           ];
           container.innerHTML = '';
-          for (const pg of pages) {
-            const a = document.createElement('a');
-            a.href = pg.p;
-            a.textContent = pg.n;
-            container.appendChild(a);
+          for (const cat of cats) {
+            const btn = document.createElement('button');
+            btn.className = 'nav-cat';
+            btn.innerHTML = cat.label + '<span class="nav-cat-arrow">&#9662;</span>';
+            const drop = document.createElement('div');
+            drop.className = 'nav-cat-drop';
+            for (const pg of cat.pages) {
+              const a = document.createElement('a');
+              a.href = pg.p;
+              a.textContent = pg.n;
+              drop.appendChild(a);
+            }
+            btn.appendChild(drop);
+            container.appendChild(btn);
           }
           const t = document.createElement('button');
           t.className = 'theme-toggle';

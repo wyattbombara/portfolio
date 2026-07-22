@@ -9,28 +9,31 @@ const settings = {
   visitorEnabled: localStorage.getItem('visitorEnabled') !== 'off',
 };
 
-const tabPages = [
-  { name: 'now', path: 'now.html' },
-  { name: 'uses', path: 'uses.html' },
-  { name: 'skills', path: 'skills.html' },
-  { name: 'accomplishments', path: 'accomplishments.html' },
-  { name: 'guestbook', path: 'guestbook.html' },
-  { name: 'pentest', path: 'pentest.html' },
-  { name: 'proxy', path: 'proxy.html' },
-  { name: 'settings', path: 'settings.html' },
-];
-
 // --- nav mode ---
 (function() {
   if (settings.navMode !== 'tabs') return;
   const container = document.querySelector('.nav-links');
   if (!container) return;
   container.innerHTML = '';
-  for (const p of tabPages) {
-    const a = document.createElement('a');
-    a.href = p.path;
-    a.textContent = p.name;
-    container.appendChild(a);
+  const cats = [
+    { label: 'about', pages: [{ n: 'now', p: 'now.html' }, { n: 'uses', p: 'uses.html' }] },
+    { label: 'abilities', pages: [{ n: 'skills', p: 'skills.html' }, { n: 'accomplishments', p: 'accomplishments.html' }] },
+    { label: 'interact', pages: [{ n: 'guestbook', p: 'guestbook.html' }, { n: 'pentest', p: 'pentest.html' }, { n: 'proxy', p: 'proxy.html' }, { n: 'settings', p: 'settings.html' }] },
+  ];
+  for (const cat of cats) {
+    const btn = document.createElement('button');
+    btn.className = 'nav-cat';
+    btn.innerHTML = `${cat.label}<span class="nav-cat-arrow">&#9662;</span>`;
+    const drop = document.createElement('div');
+    drop.className = 'nav-cat-drop';
+    for (const pg of cat.pages) {
+      const a = document.createElement('a');
+      a.href = pg.p;
+      a.textContent = pg.n;
+      drop.appendChild(a);
+    }
+    btn.appendChild(drop);
+    container.appendChild(btn);
   }
   const toggle = document.createElement('button');
   toggle.className = 'theme-toggle';

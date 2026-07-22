@@ -115,6 +115,60 @@ nav {
   color: var(--nav-hover);
 }
 
+.nav-cat {
+  position: relative;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--nav-link);
+  transition: color 0.2s;
+  background: none;
+  border: none;
+  font-family: inherit;
+  padding: 0;
+}
+
+.nav-cat:hover {
+  color: var(--nav-hover);
+}
+
+.nav-cat-drop {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 0.5rem;
+  background: var(--tag-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.35rem 0;
+  min-width: 110px;
+  z-index: 100;
+}
+
+.nav-cat:hover .nav-cat-drop {
+  display: block;
+}
+
+.nav-cat-drop a {
+  display: block;
+  padding: 0.3rem 1rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+
+.nav-cat-drop a:hover {
+  color: var(--text);
+  background: var(--border);
+}
+
+.nav-cat-arrow {
+  font-size: 0.6rem;
+  margin-left: 0.15rem;
+}
+
 main {
   display: flex;
   flex-direction: column;
