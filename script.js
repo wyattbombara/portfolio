@@ -271,3 +271,122 @@ if (clockEl) {
   }
   draw();
 })();
+
+// terminal navigation
+(function() {
+  const btn = document.getElementById('termBtn');
+  if (!btn) return;
+
+  const pages = {
+    home: { path: 'index.html', desc: 'go to the home page' },
+    index: { path: 'index.html', desc: 'go to the home page' },
+    now: { path: 'now.html', desc: 'what i\'m up to right now' },
+    uses: { path: 'uses.html', desc: 'gear and software i use' },
+    skills: { path: 'skills.html', desc: 'dev path and skills' },
+    accomplishments: { path: 'accomplishments.html', desc: 'things i\'ve done' },
+    guestbook: { path: 'guestbook.html', desc: 'sign the guestbook' },
+    pentest: { path: 'pentest.html', desc: 'pen testing experience' },
+    proxy: { path: 'proxy.html', desc: 'barebones web proxy' },
+    tollsec: { path: 'tollsec.html', desc: 'hacktivist group' },
+  };
+
+  function buildOverlay() {
+    const overlay = document.createElement('div');
+    overlay.className = 'term-overlay';
+    overlay.id = 'termOverlay';
+    overlay.innerHTML = `
+      <div class="term-window">
+        <div class="term-header">
+          <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span>
+          <span class="term-title">wyatt@portfolio:~</span>
+        </div>
+        <div class="term-output" id="termOutput">
+          <div>type <span class="highlight">help</span> for available commands</div>
+        </div>
+        <div class="term-input-line">
+          <span class="prompt">$</span>
+          <input type="text" class="term-input" id="termInput" autocomplete="off" spellcheck="false" autofocus>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    const input = overlay.querySelector('#termInput');
+    const output = overlay.querySelector('#termOutput');
+
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeTerm();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('open')) closeTerm();
+    });
+
+    function closeTerm() {
+      overlay.classList.remove('open');
+      input.blur();
+    }
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const cmd = input.value.trim().toLowerCase();
+        const line = document.createElement('div');
+        line.innerHTML = `<span class="prompt">$</span> ${escapeHtml(input.value.trim())}`;
+        output.appendChild(line);
+        input.value = '';
+        processCmd(cmd, output);
+        output.scrollTop = output.scrollHeight;
+      }
+    });
+
+    btn.addEventListener('click', () => {
+      overlay.classList.add('open');
+      setTimeout(() => input.focus(), 100);
+    });
+  }
+
+  function escapeHtml(s) {
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function processCmd(cmd, output) {
+    if (!cmd) return;
+
+    const parts = cmd.split(/\s+/);
+    const main = parts[0];
+
+    if (main === 'help') {
+      const names = Object.keys(pages);
+      const maxLen = Math.max(...names.map(n => n.length));
+      let html = '<div style="margin-bottom:0.25rem;">available commands:</div>';
+      for (const name of names) {
+        const pad = '&nbsp;'.repeat(maxLen - name.length + 2);
+        html += `<div>&nbsp;&nbsp;<span class="highlight">${name}</span>${pad}${pages[name].desc}</div>`;
+      }
+      html += `<div>&nbsp;&nbsp;<span class="highlight">clear</span>${'&nbsp;'.repeat(maxLen - 4)}clear the terminal</div>`;
+      html += `<div>&nbsp;&nbsp;<span class="highlight">exit</span>${'&nbsp;'.repeat(maxLen - 3)}close the terminal</div>`;
+      html += `<div>&nbsp;&nbsp;<span class="highlight">whoami</span>${'&nbsp;'.repeat(maxLen - 5)}display user info</div>`;
+      addOutput(html);
+    } else if (main === 'clear') {
+      output.innerHTML = '';
+    } else if (main === 'exit' || main === 'close') {
+      document.getElementById('termOverlay').classList.remove('open');
+    } else if (main === 'whoami') {
+      addOutput('wyatt &mdash; hacktivist, developer, pentester');
+    } else if (pages[main]) {
+      window.location.href = pages[main].path;
+    } else {
+      addOutput(`<span class="error">unknown command: ${escapeHtml(main)}</span>`);
+    }
+
+    function addOutput(html) {
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      output.appendChild(div);
+    }
+  }
+
+  buildOverlay();
+})();

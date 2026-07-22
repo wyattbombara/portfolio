@@ -455,6 +455,123 @@ main {
   color: var(--nav-hover);
 }
 
+.term-btn {
+  background: none;
+  border: none;
+  color: var(--nav-link);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+  font-family: inherit;
+}
+
+.term-btn:hover {
+  color: var(--accent, var(--nav-hover));
+}
+
+.term-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(4px);
+  justify-content: center;
+  align-items: center;
+}
+
+.term-overlay.open {
+  display: flex;
+}
+
+.term-window {
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  background: #0a0a0a;
+  border: 1px solid #1a3a1a;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.82rem;
+  box-shadow: 0 0 40px rgba(34,197,94,0.08);
+}
+
+.term-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #111;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.term-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.term-dot:nth-child(1) { background: #ff5f56; }
+.term-dot:nth-child(2) { background: #ffbd2e; }
+.term-dot:nth-child(3) { background: #27c93f; }
+
+.term-title {
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: #555;
+}
+
+.term-output {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  line-height: 1.6;
+  color: #ccc;
+}
+
+.term-output .prompt {
+  color: #22c55e;
+}
+
+.term-output .highlight {
+  color: #22c55e;
+}
+
+.term-output .dim {
+  color: #555;
+}
+
+.term-output .error {
+  color: #ef4444;
+}
+
+.term-input-line {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px 12px;
+  gap: 0.5rem;
+}
+
+.term-input-line .prompt {
+  color: #22c55e;
+  flex-shrink: 0;
+}
+
+.term-input {
+  background: transparent;
+  border: none;
+  color: #ccc;
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+  flex: 1;
+  caret-color: #22c55e;
+}
+
 /* glitch effect for tollsec */
 
 .card {
