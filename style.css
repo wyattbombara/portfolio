@@ -708,3 +708,61 @@ main {
   animation: blink 0.8s step-end infinite;
   color: var(--text);
 }
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--project-divider);
+  gap: 1rem;
+}
+
+.setting-row:last-child {
+  border-bottom: none;
+}
+
+.setting-info {
+  text-align: left;
+}
+
+.setting-label {
+  font-size: 0.85rem;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.setting-desc {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-top: 0.1rem;
+}
+
+.setting-control {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.setting-btn {
+  background: var(--tag-bg);
+  border: 1px solid var(--border-light);
+  color: var(--text-muted);
+  padding: 0.3rem 0.7rem;
+  border-radius: 5px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.setting-btn:hover {
+  border-color: var(--hover-border);
+  color: var(--text-secondary);
+}
+
+.setting-btn.active {
+  background: transparent;
+  border-color: var(--text-muted);
+  color: var(--text);
+}

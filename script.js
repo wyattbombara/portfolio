@@ -2,6 +2,44 @@
 const _ = [49, 48, 57, 57, 56, 49, 56, 56, 49, 55, 57, 51, 52, 51, 51, 49, 57, 49, 52].map(c => String.fromCharCode(c)).join('');
 const DISCORD_ID = _;
 
+// --- settings init ---
+const settings = {
+  navMode: localStorage.getItem('navMode') || 'terminal',
+  particles: localStorage.getItem('particles') !== 'off',
+  spotifyEnabled: localStorage.getItem('spotifyEnabled') !== 'off',
+  visitorEnabled: localStorage.getItem('visitorEnabled') !== 'off',
+};
+
+const tabPages = [
+  { name: 'now', path: 'now.html' },
+  { name: 'uses', path: 'uses.html' },
+  { name: 'skills', path: 'skills.html' },
+  { name: 'accomplishments', path: 'accomplishments.html' },
+  { name: 'guestbook', path: 'guestbook.html' },
+  { name: 'pentest', path: 'pentest.html' },
+  { name: 'proxy', path: 'proxy.html' },
+  { name: 'settings', path: 'settings.html' },
+];
+
+// --- nav mode ---
+(function() {
+  if (settings.navMode !== 'tabs') return;
+  const container = document.querySelector('.nav-links');
+  if (!container) return;
+  container.innerHTML = '';
+  for (const p of tabPages) {
+    const a = document.createElement('a');
+    a.href = p.path;
+    a.textContent = p.name;
+    container.appendChild(a);
+  }
+  const toggle = document.createElement('button');
+  toggle.className = 'theme-toggle';
+  toggle.id = 'themeToggle';
+  toggle.textContent = 'light';
+  container.appendChild(toggle);
+})();
+
 // --- lanyard websocket ---
 let ws;
 
@@ -24,14 +62,11 @@ function connectLanyard() {
 }
 
 function updateUI(data) {
-  // status dot
-  const dot = document.querySelector('.status-dot');
-  if (dot) {
-    const colors = { online: '#22c55e', idle: '#f59e0b', dnd: '#ef4444', offline: '#555' };
-    dot.style.background = colors[data.discord_status] || '#555';
+  if (!settings.spotifyEnabled) {
+    const se = document.getElementById('spotify');
+    if (se) se.style.display = 'none';
+    return;
   }
-
-  // spotify + game
   const spotifyEl = document.getElementById('spotify');
   if (spotifyEl) {
     const game = data.activities?.find(a => a.type === 0);
@@ -140,7 +175,7 @@ if (toggle) {
     document.documentElement.setAttribute('data-theme', 'light');
     toggle.textContent = 'dark';
   }
-  // set initial cusdis theme
+
   const cusdis = document.querySelector('#cusdis_thread');
   if (cusdis) cusdis.setAttribute('data-theme', saved === 'light' ? 'light' : 'dark');
 
@@ -155,7 +190,6 @@ if (toggle) {
       toggle.textContent = 'dark';
       localStorage.setItem('theme', 'light');
     }
-    // update cusdis theme
     const cusdis = document.querySelector('#cusdis_thread');
     if (cusdis) {
       cusdis.setAttribute('data-theme', isLight ? 'dark' : 'light');
@@ -216,11 +250,15 @@ if (el) {
 // visit counter
 const counter = document.getElementById('visitorCount');
 if (counter) {
-  const key = 'visits';
-  let count = localStorage.getItem(key);
-  count = count ? parseInt(count) + 1 : 1;
-  localStorage.setItem(key, count);
-  counter.textContent = 'visits: ' + count;
+  if (!settings.visitorEnabled) {
+    counter.style.display = 'none';
+  } else {
+    const key = 'visits';
+    let count = localStorage.getItem(key);
+    count = count ? parseInt(count) + 1 : 1;
+    localStorage.setItem(key, count);
+    counter.textContent = 'visits: ' + count;
+  }
 }
 
 // footer clock
@@ -235,42 +273,44 @@ if (clockEl) {
 }
 
 // particle background
-(function() {
-  const c = document.createElement('canvas');
-  c.id = 'particle-canvas';
-  document.body.prepend(c);
-  const ctx = c.getContext('2d');
-  let particles = [];
-  const COUNT = 60;
+if (settings.particles) {
+  (function() {
+    const c = document.createElement('canvas');
+    c.id = 'particle-canvas';
+    document.body.prepend(c);
+    const ctx = c.getContext('2d');
+    let particles = [];
+    const COUNT = 60;
 
-  function resize() { c.width = innerWidth; c.height = innerHeight; }
-  resize();
-  addEventListener('resize', resize);
+    function resize() { c.width = innerWidth; c.height = innerHeight; }
+    resize();
+    addEventListener('resize', resize);
 
-  for (let i = 0; i < COUNT; i++) {
-    particles.push({
-      x: Math.random() * c.width,
-      y: Math.random() * c.height,
-      r: Math.random() * 2 + 1,
-      dy: Math.random() * 0.3 + 0.1,
-      o: Math.random() * 0.5 + 0.1,
-    });
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, c.width, c.height);
-    for (const p of particles) {
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(200,200,200,${p.o})`;
-      ctx.fill();
-      p.y += p.dy;
-      if (p.y > c.height + 5) { p.y = -5; p.x = Math.random() * c.width; }
+    for (let i = 0; i < COUNT; i++) {
+      particles.push({
+        x: Math.random() * c.width,
+        y: Math.random() * c.height,
+        r: Math.random() * 2 + 1,
+        dy: Math.random() * 0.3 + 0.1,
+        o: Math.random() * 0.5 + 0.1,
+      });
     }
-    requestAnimationFrame(draw);
-  }
-  draw();
-})();
+
+    function draw() {
+      ctx.clearRect(0, 0, c.width, c.height);
+      for (const p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(200,200,200,${p.o})`;
+        ctx.fill();
+        p.y += p.dy;
+        if (p.y > c.height + 5) { p.y = -5; p.x = Math.random() * c.width; }
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+}
 
 // terminal navigation
 (function() {
@@ -287,6 +327,7 @@ if (clockEl) {
     guestbook: { path: 'guestbook.html', desc: 'sign the guestbook' },
     pentest: { path: 'pentest.html', desc: 'pen testing experience' },
     proxy: { path: 'proxy.html', desc: 'barebones web proxy' },
+    settings: { path: 'settings.html', desc: 'configure the site' },
   };
 
   function buildOverlay() {

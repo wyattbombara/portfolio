@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>settings — Wyatt</title>
+  <meta property="og:title" content="settings — Wyatt">
+  <meta property="og:description" content="configure the site">
+  <meta property="og:url" content="https://wyattbombara.github.io/portfolio/settings.html">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>W</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+    <nav>
+      <a href="index.html" class="logo">wyatt</a>
+      <div class="nav-links">
+        <button id="termBtn" class="term-btn">terminal</button>
+        <button class="theme-toggle" id="themeToggle">light</button>
+      </div>
+    </nav>
+
+    <main>
+      <div class="card" style="text-align: center;">
+        <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem;">settings</div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-label">navigation</div>
+            <div class="setting-desc">terminal commands or classic tabs</div>
+          </div>
+          <div class="setting-control">
+            <button class="setting-btn" data-setting="navMode" data-value="terminal" id="navTerminal">terminal</button>
+            <button class="setting-btn" data-setting="navMode" data-value="tabs" id="navTabs">tabs</button>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-label">theme</div>
+            <div class="setting-desc">dark or light mode</div>
+          </div>
+          <div class="setting-control">
+            <button class="setting-btn" data-setting="theme" data-value="dark" id="themeDark">dark</button>
+            <button class="setting-btn" data-setting="theme" data-value="light" id="themeLight">light</button>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-label">particles</div>
+            <div class="setting-desc">falling particle background</div>
+          </div>
+          <div class="setting-control">
+            <button class="setting-btn" data-setting="particles" data-value="on" id="partOn">on</button>
+            <button class="setting-btn" data-setting="particles" data-value="off" id="partOff">off</button>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-label">spotify</div>
+            <div class="setting-desc">show now-playing on home page</div>
+          </div>
+          <div class="setting-control">
+            <button class="setting-btn" data-setting="spotifyEnabled" data-value="on" id="spotOn">on</button>
+            <button class="setting-btn" data-setting="spotifyEnabled" data-value="off" id="spotOff">off</button>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-label">visit counter</div>
+            <div class="setting-desc">display visit count on each page</div>
+          </div>
+          <div class="setting-control">
+            <button class="setting-btn" data-setting="visitorEnabled" data-value="on" id="visOn">on</button>
+            <button class="setting-btn" data-setting="visitorEnabled" data-value="off" id="visOff">off</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div class="footer-clock" id="footerClock"></div>
+
+    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.7rem; color: var(--text-dim);">
+      <a href="tollsec.html" style="color: var(--bg);">.</a>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const map = {
+        navMode: { terminal: 'navTerminal', tabs: 'navTabs' },
+        theme: { dark: 'themeDark', light: 'themeLight' },
+        particles: { on: 'partOn', off: 'partOff' },
+        spotifyEnabled: { on: 'spotOn', off: 'spotOff' },
+        visitorEnabled: { on: 'visOn', off: 'visOff' },
+      };
+
+      function getVal(key) {
+        if (key === 'theme') return localStorage.getItem('theme') || 'dark';
+        const v = localStorage.getItem(key);
+        if (v === null || v === undefined) return key === 'particles' || key === 'spotifyEnabled' || key === 'visitorEnabled' ? 'on' : 'terminal';
+        if (v === 'on' || v === 'off' || v === 'terminal' || v === 'tabs' || v === 'dark' || v === 'light') return v;
+        return key === 'navMode' ? 'terminal' : 'on';
+      }
+
+      function applyState() {
+        for (const [setting, ids] of Object.entries(map)) {
+          const val = getVal(setting);
+          for (const [v, id] of Object.entries(ids)) {
+            const btn = document.getElementById(id);
+            if (btn) btn.classList.toggle('active', v === val);
+          }
+        }
+      }
+
+      document.querySelectorAll('.setting-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const setting = btn.dataset.setting;
+          const value = btn.dataset.value;
+          localStorage.setItem(setting, value);
+          if (setting === 'theme') {
+            document.documentElement.setAttribute('data-theme', value === 'light' ? 'light' : '');
+            const t = document.getElementById('themeToggle');
+            if (t) t.textContent = value === 'light' ? 'dark' : 'light';
+          }
+          applyState();
+        });
+      });
+
+      applyState();
+    })();
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>
