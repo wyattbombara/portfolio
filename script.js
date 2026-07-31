@@ -420,7 +420,7 @@ if (settings.particles) startParticles();
     } else if (main === 'exit' || main === 'close') {
       document.getElementById('termOverlay').classList.remove('open');
     } else if (main === 'whoami') {
-      addOutput('wyatt &mdash; hacktivist, developer, pentester');
+      addOutput('user &mdash; hacktivist, developer, pentester');
     } else if (pages[main]) {
       window.location.href = pages[main].path;
     } else if (main === 'tollsec') {
