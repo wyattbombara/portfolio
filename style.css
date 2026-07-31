@@ -707,6 +707,28 @@ main {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  body,
+  .card,
+  .terminal {
+    animation: none;
+  }
+  .status-dot,
+  .typing-cursor,
+  .spotify-icon.playing,
+  .glitch,
+  .glitch::before,
+  .glitch::after {
+    animation: none !important;
+  }
+  #particle-canvas {
+    display: none;
+  }
+}
+
 .terminal {
   background: #0a0a0a;
   border: 1px solid var(--border);

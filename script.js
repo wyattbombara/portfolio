@@ -159,7 +159,7 @@ function updateProgress() {
     const start = parseInt(gc.dataset.start);
     gc.textContent = fmtTime(Date.now() - start);
   }
-  requestAnimationFrame(updateProgress);
+  if (!document.hidden) requestAnimationFrame(updateProgress);
 }
 
 connectLanyard();
@@ -272,7 +272,9 @@ if (clockEl) {
 let particleAnimId = null;
 
 function startParticles() {
-  if (document.getElementById('particle-canvas')) return;
+  if (particleAnimId) cancelAnimationFrame(particleAnimId);
+  const old = document.getElementById('particle-canvas');
+  if (old) old.remove();
   const c = document.createElement('canvas');
   c.id = 'particle-canvas';
   document.body.prepend(c);
@@ -295,6 +297,7 @@ function startParticles() {
   }
 
   function draw() {
+    if (document.hidden) { particleAnimId = null; return; }
     ctx.clearRect(0, 0, c.width, c.height);
     for (const p of particles) {
       ctx.beginPath();
@@ -308,6 +311,13 @@ function startParticles() {
   }
   draw();
 }
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) return;
+  if (document.getElementById('particle-canvas') && !particleAnimId) startParticles();
+  const bar = document.querySelector('.spotify-bar');
+  if (bar) updateProgress();
+});
 
 function stopParticles() {
   const c = document.getElementById('particle-canvas');
@@ -346,6 +356,7 @@ if (settings.particles) startParticles();
           <span class="term-title">wyatt@portfolio:~</span>
         </div>
         <div class="term-output" id="termOutput">
+          <div class="dim">wyatt@portfolio:~</div>
           <div>type <span class="highlight">help</span> for available commands</div>
         </div>
         <div class="term-input-line">
@@ -410,16 +421,24 @@ if (settings.particles) startParticles();
         const pad = '&nbsp;'.repeat(maxLen - name.length + 2);
         html += `<div>&nbsp;&nbsp;<span class="highlight">${name}</span>${pad}${pages[name].desc}</div>`;
       }
-      html += `<div>&nbsp;&nbsp;<span class="highlight">clear</span>${'&nbsp;'.repeat(maxLen - 4)}clear the terminal</div>`;
-      html += `<div>&nbsp;&nbsp;<span class="highlight">exit</span>${'&nbsp;'.repeat(maxLen - 3)}close the terminal</div>`;
-      html += `<div>&nbsp;&nbsp;<span class="highlight">whoami</span>${'&nbsp;'.repeat(maxLen - 5)}display user info</div>`;
+      const extra = { help: 'show this help', banner: 'show the banner', about: 'about this site', date: 'current date and time', whoami: 'display user info', clear: 'clear the terminal', exit: 'close the terminal' };
+      for (const [name, desc] of Object.entries(extra)) {
+        const pad = '&nbsp;'.repeat(maxLen - name.length + 2);
+        html += `<div>&nbsp;&nbsp;<span class="highlight">${name}</span>${pad}${desc}</div>`;
+      }
       addOutput(html);
     } else if (main === 'clear') {
       output.innerHTML = '';
     } else if (main === 'exit' || main === 'close') {
       document.getElementById('termOverlay').classList.remove('open');
     } else if (main === 'whoami') {
-      addOutput('user');
+      addOutput('user &mdash; hacktivist, developer, pentester');
+    } else if (main === 'banner') {
+      addOutput('<pre class="dim">wyatt@portfolio:~</pre><div class="dim">type <span class="highlight">help</span> for available commands</div>');
+    } else if (main === 'about') {
+      addOutput('terminal-driven portfolio. dark mode by default, `whoami` for a bio.');
+    } else if (main === 'date') {
+      addOutput(new Date().toString());
     } else if (pages[main]) {
       window.location.href = pages[main].path;
     } else if (main === 'tollsec') {
