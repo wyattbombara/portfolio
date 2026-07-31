@@ -356,8 +356,7 @@ if (settings.particles) startParticles();
           <span class="term-title">wyatt@portfolio:~</span>
         </div>
         <div class="term-output" id="termOutput">
-          <div class="dim">wyatt@portfolio:~</div>
-          <div>type <span class="highlight">help</span> for available commands</div>
+          <div class="dim">welcome to wyatt's portfolio — type <span class="highlight">help</span> to get started</div>
         </div>
         <div class="term-input-line">
           <span class="prompt">$</span>
@@ -434,9 +433,14 @@ if (settings.particles) startParticles();
     } else if (main === 'whoami') {
       addOutput('user &mdash; hacktivist, developer, pentester');
     } else if (main === 'banner') {
-      addOutput('<pre class="dim">wyatt@portfolio:~</pre><div class="dim">type <span class="highlight">help</span> for available commands</div>');
+      addOutput('wyatt@portfolio:~<br>welcome to my terminal portfolio.');
     } else if (main === 'about') {
-      addOutput('terminal-driven portfolio. dark mode by default, `whoami` for a bio.');
+      addOutput(
+        'terminal-driven portfolio. dark mode by default.<br>' +
+        'built with vanilla html/css/js, hosted on github pages.<br>' +
+        'built a web proxy and game site, host my own ai locally via open webui.<br>' +
+        'type <span class="highlight">whoami</span> for a bio, <span class="highlight">now</span> for what i\'m up to, or any page name to navigate.'
+      );
     } else if (main === 'date') {
       addOutput(new Date().toString());
     } else if (pages[main]) {
