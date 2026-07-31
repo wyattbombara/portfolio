@@ -45,8 +45,16 @@ const settings = {
 // --- lanyard websocket ---
 let ws;
 
+function setStatus(status, label) {
+  const dot = document.querySelector('.status-dot');
+  if (!dot) return;
+  dot.className = 'status-dot ' + (status || 'offline');
+  dot.title = 'discord: ' + (label || 'offline');
+}
+
 function connectLanyard() {
   if (ws) ws.close();
+  setStatus('offline', 'connecting...');
   ws = new WebSocket('wss://api.lanyard.rest/socket');
 
   ws.onopen = () => {
@@ -60,10 +68,14 @@ function connectLanyard() {
     }
   };
 
-  ws.onclose = () => setTimeout(connectLanyard, 5000);
+  ws.onclose = () => {
+    setStatus('offline', 'offline');
+    setTimeout(connectLanyard, 5000);
+  };
 }
 
 function updateUI(data) {
+  setStatus(data.discord_status || 'offline', data.discord_status || 'offline');
   const spotifyEl = document.getElementById('spotify');
   if (spotifyEl) {
     const game = data.activities?.find(a => a.type === 0);
