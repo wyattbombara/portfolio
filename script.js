@@ -208,7 +208,6 @@ if (el) {
     'making computers do what I want',
     'writing code that probably works',
     'figuring it out as I go',
-    'code, monster, chaos',
     "for legal reasons, that's a joke",
     'doing stuff, idk yet',
     'probably should be sleeping',
