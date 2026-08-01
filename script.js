@@ -432,7 +432,7 @@ if (settings.particles) startParticles();
         const pad = '&nbsp;'.repeat(maxLen - name.length + 2);
         html += `<div>&nbsp;&nbsp;<span class="highlight">${name}</span>${pad}${pages[name].desc}</div>`;
       }
-      const extra = { help: 'show this help', banner: 'show the banner', about: 'about this site', date: 'current date and time', whoami: 'display user info', clear: 'clear the terminal', exit: 'close the terminal' };
+      const extra = { help: 'show this help', banner: 'show the banner', about: 'about this site', date: 'current date and time', whoami: 'show current user', 'whois wyatt': 'bio for the site owner', clear: 'clear the terminal', exit: 'close the terminal' };
       for (const [name, desc] of Object.entries(extra)) {
         const pad = '&nbsp;'.repeat(maxLen - name.length + 2);
         html += `<div>&nbsp;&nbsp;<span class="highlight">${name}</span>${pad}${desc}</div>`;
@@ -443,7 +443,20 @@ if (settings.particles) startParticles();
     } else if (main === 'exit' || main === 'close') {
       document.getElementById('termOverlay').classList.remove('open');
     } else if (main === 'whoami') {
-      addOutput('user &mdash; hacktivist, developer, pentester');
+      addOutput('user@portfolio');
+    } else if (main === 'whois' || main === 'bio') {
+      const target = parts[1];
+      if (target && target !== 'wyatt') {
+        addOutput(`<span class="error">no user found: ${escapeHtml(target)}</span>`);
+        return;
+      }
+      addOutput(
+        'name:&nbsp;&nbsp;&nbsp; wyatt<br>' +
+        'role:&nbsp;&nbsp;&nbsp; developer / security researcher<br>' +
+        'stack:&nbsp;&nbsp; web, self-hosting, whatever works<br>' +
+        'builds:&nbsp;&nbsp; web proxy &amp; game site, self-hosted AI<br>' +
+        'status:&nbsp;&nbsp; <span class="highlight">taking build requests</span>'
+      );
     } else if (main === 'banner') {
       addOutput('wyatt@portfolio:~<br>welcome to my terminal portfolio.');
     } else if (main === 'about') {
@@ -451,7 +464,7 @@ if (settings.particles) startParticles();
         'terminal-driven portfolio. dark mode by default.<br>' +
         'built with vanilla html/css/js, hosted on github pages.<br>' +
         'built a web proxy and game site, host my own ai locally via open webui.<br>' +
-        'type <span class="highlight">whoami</span> for a bio, <span class="highlight">now</span> for what i\'m up to, or any page name to navigate.'
+        'type <span class="highlight">whois wyatt</span> for a bio, <span class="highlight">now</span> for what i\'m up to, or any page name to navigate.'
       );
     } else if (main === 'date') {
       addOutput(new Date().toString());
