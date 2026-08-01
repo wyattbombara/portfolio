@@ -357,6 +357,27 @@ if (settings.particles) startParticles();
     settings: { path: 'settings.html', desc: 'configure the site' },
   };
 
+  let cwd = 'home';
+  const HOME = 'home';
+
+  const extra = {
+    help: { desc: 'show this help' },
+    banner: { desc: 'show the banner' },
+    about: { desc: 'about this site' },
+    date: { desc: 'current date and time' },
+    whoami: { desc: 'show current user' },
+    'whois wyatt': { desc: 'bio for the site owner' },
+    clear: { desc: 'clear the terminal' },
+    exit: { desc: 'close the terminal' },
+    ls: { desc: 'list pages' },
+    cd: { desc: 'go to a page (cd now)' },
+    neofetch: { desc: 'system info' },
+  };
+
+  function promptHtml() {
+    return `<span class="prompt">wyatt@portfolio:~${cwd === HOME ? '' : '/' + cwd}</span>`;
+  }
+
   function buildOverlay() {
     const overlay = document.createElement('div');
     overlay.className = 'term-overlay';
@@ -371,7 +392,7 @@ if (settings.particles) startParticles();
           <div class="dim">welcome to wyatt's portfolio — type <span class="highlight">help</span> to get started</div>
         </div>
         <div class="term-input-line">
-          <span class="prompt">$</span>
+          <span class="prompt" id="termPrompt">$</span>
           <input type="text" class="term-input" id="termInput" autocomplete="off" spellcheck="false" autofocus>
         </div>
       </div>
@@ -398,10 +419,12 @@ if (settings.particles) startParticles();
       if (e.key === 'Enter') {
         const cmd = input.value.trim().toLowerCase();
         const line = document.createElement('div');
-        line.innerHTML = `<span class="prompt">$</span> ${escapeHtml(input.value.trim())}`;
+        line.innerHTML = `${promptHtml()} ${escapeHtml(input.value.trim())}`;
         output.appendChild(line);
         input.value = '';
         processCmd(cmd, output);
+        const p = document.getElementById('termPrompt');
+        if (p) p.innerHTML = promptHtml();
         output.scrollTop = output.scrollHeight;
       }
     });
@@ -425,17 +448,20 @@ if (settings.particles) startParticles();
     const main = parts[0];
 
     if (main === 'help') {
-      const names = Object.keys(pages);
-      const maxLen = Math.max(...names.map(n => n.length));
+      const maxLen = Math.max(...Object.keys(pages).map(n => n.length));
+      const row = (n, d) => `<div>&nbsp;&nbsp;<span class="highlight">${n}</span>${'&nbsp;'.repeat(maxLen - n.length + 2)}${d}</div>`;
+      const groups = [
+        { title: 'navigation', cmds: ['ls', 'cd', 'home', 'index', 'now', 'uses', 'skills', 'accomplishments', 'guestbook', 'pentest', 'proxy', 'settings'] },
+        { title: 'system', cmds: ['whoami', 'whois wyatt', 'neofetch', 'date'] },
+        { title: 'misc', cmds: ['about', 'banner', 'help', 'clear', 'exit'] },
+      ];
       let html = '<div style="margin-bottom:0.25rem;">available commands:</div>';
-      for (const name of names) {
-        const pad = '&nbsp;'.repeat(maxLen - name.length + 2);
-        html += `<div>&nbsp;&nbsp;<span class="highlight">${name}</span>${pad}${pages[name].desc}</div>`;
-      }
-      const extra = { help: 'show this help', banner: 'show the banner', about: 'about this site', date: 'current date and time', whoami: 'show current user', 'whois wyatt': 'bio for the site owner', clear: 'clear the terminal', exit: 'close the terminal' };
-      for (const [name, desc] of Object.entries(extra)) {
-        const pad = '&nbsp;'.repeat(maxLen - name.length + 2);
-        html += `<div>&nbsp;&nbsp;<span class="highlight">${name}</span>${pad}${desc}</div>`;
+      for (const g of groups) {
+        html += `<div class="dim" style="margin-top:0.5rem;">-- ${g.title} --</div>`;
+        for (const c of g.cmds) {
+          const d = pages[c] ? pages[c].desc : extra[c]?.desc;
+          if (d) html += row(c, d);
+        }
       }
       addOutput(html);
     } else if (main === 'clear') {
@@ -468,7 +494,36 @@ if (settings.particles) startParticles();
       );
     } else if (main === 'date') {
       addOutput(new Date().toString());
+    } else if (main === 'ls') {
+      const names = Object.keys(pages).sort();
+      addOutput('<div class="dim">' + names.join('&nbsp;&nbsp;') + '</div>');
+    } else if (main === 'cd') {
+      const target = parts[1];
+      if (!target || target === '~' || target === 'home' || target === '/') {
+        cwd = HOME;
+        return;
+      }
+      if (pages[target]) {
+        window.location.href = pages[target].path;
+      } else {
+        addOutput(`<span class="error">cd: no such directory: ${escapeHtml(target)}</span>`);
+      }
+    } else if (main === 'neofetch') {
+      const d = new Date();
+      addOutput(
+        '<div>' +
+        '<div>&nbsp;&nbsp;<span class="highlight">wyatt@portfolio</span></div>' +
+        '<div>&nbsp;&nbsp;---------------------</div>' +
+        '<div>&nbsp;&nbsp;OS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; portfolio v1.0</div>' +
+        '<div>&nbsp;&nbsp;Host&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; github pages</div>' +
+        '<div>&nbsp;&nbsp;Shell&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this terminal</div>' +
+        `<div>&nbsp;&nbsp;Uptime&nbsp;&nbsp;&nbsp;&nbsp; ${d.getFullYear()} (est.)</div>` +
+        '<div>&nbsp;&nbsp;Theme&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ' + (document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark') + '</div>' +
+        '<div>&nbsp;&nbsp;Status&nbsp;&nbsp;&nbsp;&nbsp; <span class="highlight">taking build requests</span></div>' +
+        '</div>'
+      );
     } else if (pages[main]) {
+      cwd = main;
       window.location.href = pages[main].path;
     } else if (main === 'tollsec') {
       window.location.href = 'tollsec.html';
