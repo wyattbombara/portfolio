@@ -64,6 +64,15 @@ body:focus-visible {
   outline: none;
 }
 
+:fullscreen {
+  outline: none;
+  background: var(--bg);
+}
+
+:fullscreen body {
+  outline: none;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
