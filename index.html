@@ -4,78 +4,75 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark light">
-  <meta name="description" content="Wyatt — developer who builds web tools, hosts his own AI, and picks up whatever tech seems useful.">
-  <meta name="theme-color" content="#090909">
-  <title>Wyatt</title>
-  <meta property="og:title" content="Wyatt">
-  <meta property="og:description" content="developer — builds web tools, hosts his own AI, picks up whatever tech seems useful">
+  <meta name="description" content="Wyatt Bombara — developer, tinkerer, and security enthusiast. Building web tools, self-hosted AI, and whatever comes next.">
+  <meta name="theme-color" content="#111211">
+  <title>Wyatt Bombara — Developer & Tinkerer</title>
+  <meta property="og:title" content="Wyatt Bombara — Developer & Tinkerer">
+  <meta property="og:description" content="Curiosity, turned into code. Web tools, self-hosted AI, and whatever comes next.">
   <meta property="og:url" content="https://wyattbombara.github.io/portfolio/">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="en_US">
   <meta property="og:image" content="https://wyattbombara.github.io/portfolio/og.png">
-  <meta property="og:image:alt" content="Wyatt — developer portfolio">
+  <meta property="og:image:alt" content="Wyatt — curiosity, turned into code">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://wyattbombara.github.io/portfolio/og.png">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>W</text></svg>">
+  <link rel="canonical" href="https://wyattbombara.github.io/portfolio/">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script src="theme-init.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <div class="page">
-    <nav>
-      <a href="index.html" class="logo">wyatt</a>
+<body class="home-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="page portfolio">
+    <nav aria-label="Main navigation">
+      <a href="index.html" class="logo" aria-label="Wyatt, home"><span class="logo-mark" aria-hidden="true">w.</span><span>wyatt<span class="logo-caption">developer & tinkerer</span></span></a>
       <div class="nav-links">
-        <button id="termBtn" class="term-btn">terminal</button>
-        <button class="theme-toggle" id="themeToggle">light</button>
+        <a href="#work">Work</a><a href="#about">About</a><a href="#contact">Contact</a>
+        <button id="termBtn" class="term-btn" aria-label="Open terminal">&gt;_</button>
+        <button class="theme-toggle" id="themeToggle" aria-label="Switch to light theme">light</button>
       </div>
     </nav>
 
-    <main>
-      <div class="card">
-        <h1>wyatt <span class="status-dot"></span></h1>
-        <p class="bio"><span id="typing-text"></span><span class="typing-cursor"></span></p>
-        <p class="desc">built a proxy site, host my own ai, pick up whatever tech seems useful</p>
-        <div class="spotify" id="spotify">
-          <span class="spotify-icon">&#9835;</span>
-          <span class="spotify-text">not playing anything</span>
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-heading">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="accent-dot" aria-hidden="true"></span> Independent developer · endlessly curious</p>
+          <h1 id="hero-heading">curiosity,<br>turned into <span class="accent-word">code<span class="word-dot">.</span></span></h1>
+          <p class="hero-description">Hey, I’m Wyatt. I build web tools, host my own AI, and follow an idea until it becomes something real.</p>
+          <div class="hero-actions"><a href="#work" class="button button-primary">Explore my work <span aria-hidden="true">↘</span></a><a href="https://github.com/wyattbombara" class="text-link" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></div>
+          <p class="current-line"><span aria-hidden="true">↳</span> <span id="typing-text">making computers do what I want</span><span class="typing-cursor" aria-hidden="true"></span></p>
         </div>
-      </div>
+        <div class="hero-art" aria-hidden="true"><span class="art-corner top-left">WB / 001</span><span class="art-corner bottom-right">ALWAYS EXPLORING</span><svg class="orbit" viewBox="0 0 440 440" fill="none"><circle cx="220" cy="220" r="178" class="orbit-guide" stroke-dasharray="2 8"/><path d="M220 16V424M16 220H424" class="orbit-guide" stroke-dasharray="3 7"/><g class="orbit-lines"><ellipse cx="220" cy="220" rx="180" ry="76" transform="rotate(-35 220 220)"/><ellipse cx="220" cy="220" rx="180" ry="76" transform="rotate(35 220 220)"/><ellipse cx="220" cy="220" rx="76" ry="180"/></g><circle cx="370" cy="118" r="6" class="orbit-node"/><circle cx="67" cy="128" r="4" class="orbit-node secondary"/><circle cx="220" cy="400" r="5" class="orbit-node"/></svg><div class="core-mark">w<span>.</span></div><span class="orbit-label label-web">web</span><span class="orbit-label label-ai">ai</span><span class="orbit-label label-security">security</span></div>
+      </section>
 
-      <div class="card">
-        <h2>projects</h2>
-        <div class="project">
-          <div class="project-title">tms site</div>
-          <div class="project-desc">modified web proxy + game site — browse and play from places that block stuff</div>
-          <div class="tags">
-            <span>Node.js</span>
-            <span>Bare Server</span>
-          </div>
-        </div>
-        <div class="project">
-          <div class="project-title">school ai</div>
-          <div class="project-desc">custom ai assistant hosted locally via Open WebUI, available through tms</div>
-          <div class="tags">
-            <span>Open WebUI</span>
-            <span>LLM</span>
-          </div>
-        </div>
-      </div>
+      <div class="discipline-strip" aria-label="Areas of interest"><span>Web development</span><span aria-hidden="true">✳</span><span>Self-hosting</span><span aria-hidden="true">✳</span><span>AI & automation</span><span aria-hidden="true">✳</span><span>Security</span></div>
 
-      <div class="card contact">
-        <a href="mailto:wyattbombara1@proton.me" class="btn">email me</a>
-      </div>
+      <section class="work-section" id="work" aria-labelledby="work-heading">
+        <div class="section-heading"><div><p class="eyebrow">01 / Selected work</p><h2 id="work-heading">Built to figure things out.</h2></div><span class="section-note">A few things I’ve put into the world.</span></div>
+        <div class="project-grid">
+          <a class="project-card" href="tms.html" aria-labelledby="tms-title">
+            <div class="project-visual tms-visual" aria-hidden="true"><span class="visual-index">01 / WEB PLATFORM</span><div class="mini-browser"><div class="browser-bar"><i></i><i></i><i></i><span>tms / gateway</span><b>↗</b></div><div class="browser-body"><span class="mini-kicker">YOUR NEXT DESTINATION</span><div class="mini-title">the web,<br>a little more open<span>.</span></div><div class="mini-search"><span>explore something new</span><b>→</b></div><div class="mini-tiles"><span>◎<small>browse</small></span><span>✳<small>play</small></span><span>⌘<small>tools</small></span></div></div></div><span class="visual-caption">CONNECT. EXPLORE. REPEAT.</span></div>
+            <div class="project-info"><div class="project-topline"><span>Development / Infrastructure</span><span class="project-arrow" aria-hidden="true">↗</span></div><h3 id="tms-title">tms site</h3><p>A modified web proxy and game hub. One place to browse, play, and experiment.</p><div class="tags"><span>Node.js</span><span>Bare Server</span><span>Web proxy</span></div></div>
+          </a>
+          <a class="project-card" href="school-ai.html" aria-labelledby="ai-title">
+            <div class="project-visual ai-visual" aria-hidden="true"><span class="visual-index">02 / SELF-HOSTED AI</span><div class="ai-orb"><svg viewBox="0 0 160 160" fill="none"><path d="M80 12C80 58 102 80 148 80C102 80 80 102 80 148C80 102 58 80 12 80C58 80 80 58 80 12Z"/><path d="M80 31C80 64 96 80 129 80C96 80 80 96 80 129C80 96 64 80 31 80C64 80 80 64 80 31Z"/></svg></div><div class="ai-prompt"><span class="prompt-star">✳</span><span>my hardware.<br><strong>my assistant.</strong></span><span class="prompt-cursor">_</span></div><span class="visual-caption">LOCAL MACHINE. OPEN POSSIBILITIES.</span></div>
+            <div class="project-info"><div class="project-topline"><span>AI / Self-hosting</span><span class="project-arrow" aria-hidden="true">↗</span></div><h3 id="ai-title">school ai</h3><p>A custom AI assistant, running locally with Open WebUI and accessible through tms.</p><div class="tags"><span>Open WebUI</span><span>LLM</span><span>Self-hosted</span></div></div>
+          </a>
+        </div>
+      </section>
+
+      <section class="about-section" id="about" aria-labelledby="about-heading">
+        <div class="about-copy"><p class="eyebrow">02 / A little about me</p><h2 id="about-heading">Learn it.<br>Build it. <span class="muted-heading">Repeat.</span></h2><p>I started with Python, found my way into C# and .NET, and kept going. These days, that means web development, Linux, networking, and finding ways to make the boring stuff run itself.</p><p>I’m also part of RAGE Robotics, FRC Team 173. I like understanding what’s happening under the hood — then making something useful with it.</p><a href="skills.html" class="text-link">Follow my learning path <span aria-hidden="true">↗</span></a></div>
+        <div class="about-side"><div class="toolbox"><div class="small-heading"><span>IN THE TOOLBOX</span><span aria-hidden="true">⌘</span></div><div class="toolbox-tags"><span>Python</span><span>C# / .NET</span><span>JavaScript</span><span>Node.js</span><span>SQL</span><span>Linux</span><span>Git</span><span>APIs</span></div><a href="uses.html" class="quiet-link">My everyday setup <span aria-hidden="true">→</span></a></div><div class="activity-card"><div class="small-heading"><span>OFF THE CLOCK</span><span class="status-dot offline" role="img" aria-label="Discord status unavailable"></span></div><div class="spotify" id="spotify"><div class="activity-idle"><span class="music-note" aria-hidden="true">♫</span><span>No music on right now.<small>Probably exploring something else.</small></span></div></div></div></div>
+      </section>
+
+      <section class="contact-section" id="contact" aria-labelledby="contact-heading"><div><p class="eyebrow">03 / Say hello</p><h2 id="contact-heading">Got an idea?<br>Let’s build something<span class="accent-word">.</span></h2><p>Have a project in mind, a question, or something cool to share? My inbox is open.</p></div><a href="mailto:wyattbombara1@proton.me" class="contact-arrow" aria-label="Email Wyatt"><span aria-hidden="true">↗</span></a><div class="contact-bottom"><a href="mailto:wyattbombara1@proton.me" class="text-link">wyattbombara1@proton.me <span aria-hidden="true">↗</span></a><a href="guestbook.html" class="quiet-link">Or leave a note in the guestbook <span aria-hidden="true">→</span></a></div></section>
     </main>
 
-    <div class="visitor-count" id="visitorCount"></div>
-
-    <div class="footer-clock" id="footerClock"></div>
-
-    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.7rem; color: var(--text-dim);">
-      <a href="tollsec.html" style="color: var(--bg);">.</a>
-    </div>
+    <footer class="site-footer"><span>© <span id="footerYear">2026</span> Wyatt Bombara</span><div><a href="now.html">Now</a><a href="settings.html">Settings</a><a href="#main">Back to top ↑</a></div><span class="local-clock"><span id="footerClock"></span> / your local time</span><span class="visitor-count" id="visitorCount"></span></footer>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>

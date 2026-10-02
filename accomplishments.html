@@ -4,51 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark light">
-  <meta name="theme-color" content="#090909">
+  <meta name="theme-color" content="#111211">
   <meta name="description" content="things I've done — Wyatt">
   <title>accomplishments — Wyatt</title>
   <meta property="og:title" content="accomplishments — Wyatt">
   <meta property="og:description" content="things I've done">
   <meta property="og:url" content="https://wyattbombara.github.io/portfolio/accomplishments.html">
   <meta property="og:type" content="website">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>W</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script src="theme-init.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
   <div class="page">
-    <nav>
-      <a href="index.html" class="logo">wyatt</a>
-      <div class="nav-links">
-        <button id="termBtn" class="term-btn">terminal</button>
-        <button class="theme-toggle" id="themeToggle">light</button>
-      </div>
+    <nav aria-label="Main navigation">
+      <a href="index.html" class="logo" aria-label="Wyatt, home"><span class="logo-mark" aria-hidden="true">w.</span><span>wyatt<span class="logo-caption">developer & tinkerer</span></span></a>
+      <div class="nav-links"><a href="index.html#work">Work</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a><button id="termBtn" class="term-btn" aria-label="Open terminal">&gt;_</button><button class="theme-toggle" id="themeToggle" aria-label="Switch to light theme">light</button></div>
     </nav>
 
-    <main>
-      <div class="card" style="text-align: center;">
-        <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem;">accomplishments</div>
-        <p style="color: var(--text-muted); font-size: 0.82rem; line-height: 1.7; margin-bottom: 0.5rem;">stuff i've actually done</p>
-        <div class="counter" style="font-size: 2rem; font-weight: 300; color: var(--text);">8</div>
-        <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em;">and counting</div>
-      </div>
-
-      <div class="card">
-        <div class="path">recreated <span>youareanidiot.exe</span> from scratch</div>
-        <div class="path">built my own <span>DoS tool</span></div>
-        <div class="path">made a <span>web proxy + game site</span> and kept it unblocked all school year</div>
-        <div class="path">taken down <span>multiple networks</span></div>
-        <div class="path">set up a <span>custom AI assistant</span> via Open WebUI, accessible through a rotating fully unblocked link held on tms site</div>
-        <div class="path"><span>Flipper Zero</span> + dual ESP32-C5 for RF pentesting</div>
-        <div class="path">founded <span>tollsec</span></div>
-        <div class="path">built this <span>whole site</span> from scratch</div>
-      </div>
+    <main id="main">
+      <header class="subpage-heading"><p class="eyebrow">Wyatt / accomplishments</p><h1>Things I’ve built</h1><p>Experiments, projects, and milestones along the way.</p></header>
+<section class="card milestone-summary"><span class="big-number">08<span aria-hidden="true">.</span></span><div><h2>Projects & experiments</h2><p class="page-description">Things I’ve made, tried, and figured out.</p></div></section><section class="card"><ol class="simple-list milestones"><li><span class="list-number">01</span><div><h3>A recreation from scratch</h3><p>Recreated youareanidiot.exe.</p></div></li><li><span class="list-number">02</span><div><h3>A custom DoS tool</h3><p>Built my own tool to explore denial of service.</p></div></li><li><span class="list-number">03</span><div><h3>tms site</h3><p>Made a web proxy and game site, and kept it available through the school year.</p></div></li><li><span class="list-number">04</span><div><h3>Network experiments</h3><p>Taken down multiple networks.</p></div></li><li><span class="list-number">05</span><div><h3>Self-hosted AI</h3><p>Set up a custom assistant with Open WebUI, accessible through tms.</p></div></li><li><span class="list-number">06</span><div><h3>RF hardware</h3><p>Flipper Zero and dual ESP32-C5 for RF pentesting.</p></div></li><li><span class="list-number">07</span><div><h3>tollsec</h3><p>Founded tollsec.</p></div></li><li><span class="list-number">08</span><div><h3>This portfolio</h3><p>Built this site from scratch.</p></div></li></ol></section>
     </main>
 
-    <div class="footer-clock" id="footerClock"></div>
-
-    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.7rem; color: var(--text-dim);">
-      <a href="tollsec.html" style="color: var(--bg);">.</a>
-    </div>
+    <footer class="site-footer"><span>© <span id="footerYear">2026</span> Wyatt Bombara</span><div><a href="index.html">Home</a><a href="settings.html">Settings</a></div><span class="local-clock"><span id="footerClock"></span> / your local time</span></footer>
   </div>
 
   <script src="script.js"></script>

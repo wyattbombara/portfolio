@@ -4,30 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark light">
-  <meta name="theme-color" content="#090909">
+  <meta name="theme-color" content="#111211">
   <meta name="description" content="sign my guestbook — Wyatt">
   <title>guestbook - Wyatt</title>
   <meta property="og:title" content="guestbook — Wyatt">
   <meta property="og:description" content="sign my guestbook">
   <meta property="og:url" content="https://wyattbombara.github.io/portfolio/guestbook.html">
   <meta property="og:type" content="website">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>W</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script src="theme-init.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
   <div class="page">
-    <nav>
-      <a href="index.html" class="logo">wyatt</a>
-      <div class="nav-links">
-        <button id="termBtn" class="term-btn">terminal</button>
-        <button class="theme-toggle" id="themeToggle">light</button>
-      </div>
+    <nav aria-label="Main navigation">
+      <a href="index.html" class="logo" aria-label="Wyatt, home"><span class="logo-mark" aria-hidden="true">w.</span><span>wyatt<span class="logo-caption">developer & tinkerer</span></span></a>
+      <div class="nav-links"><a href="index.html#work">Work</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a><button id="termBtn" class="term-btn" aria-label="Open terminal">&gt;_</button><button class="theme-toggle" id="themeToggle" aria-label="Switch to light theme">light</button></div>
     </nav>
 
-    <main>
-      <div class="card" style="text-align: center;">
-        <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; transition: color 0.3s;">guestbook</div>
-        <p style="color: var(--text-muted); font-size: 0.82rem; margin-bottom: 1rem;">sign it or dont</p>
+    <main id="main">
+      <header class="subpage-heading"><p class="eyebrow">Wyatt / guestbook</p><h1>You were here</h1><p>Leave a thought, an idea, or a quick hello.</p></header>
+      <div class="card guestbook-card">
+        <h2>Leave a note</h2>
+        <p class="page-description">Thanks for stopping by. Leave a note below.</p>
         <div id="cusdis_thread"
           data-host="https://cusdis.com"
           data-app-id="662d2955-15de-4ae9-9380-c8a7aaa488ba"
@@ -40,11 +40,7 @@
       </div>
     </main>
 
-    <div class="footer-clock" id="footerClock"></div>
-
-    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.7rem; color: var(--text-dim);">
-      <a href="tollsec.html" style="color: var(--bg);">.</a>
-    </div>
+    <footer class="site-footer"><span>© <span id="footerYear">2026</span> Wyatt Bombara</span><div><a href="index.html">Home</a><a href="settings.html">Settings</a></div><span class="local-clock"><span id="footerClock"></span> / your local time</span></footer>
   </div>
 
   <script src="script.js"></script>

@@ -4,61 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark light">
-  <meta name="theme-color" content="#090909">
+  <meta name="theme-color" content="#111211">
   <meta name="description" content="gear and software I use — Wyatt">
   <title>uses - Wyatt</title>
   <meta property="og:title" content="uses — Wyatt">
   <meta property="og:description" content="gear and software I use">
   <meta property="og:url" content="https://wyattbombara.github.io/portfolio/uses.html">
   <meta property="og:type" content="website">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>W</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script src="theme-init.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
   <div class="page">
-    <nav>
-      <a href="index.html" class="logo">wyatt</a>
-      <div class="nav-links">
-        <button id="termBtn" class="term-btn">terminal</button>
-        <button class="theme-toggle" id="themeToggle">light</button>
-      </div>
+    <nav aria-label="Main navigation">
+      <a href="index.html" class="logo" aria-label="Wyatt, home"><span class="logo-mark" aria-hidden="true">w.</span><span>wyatt<span class="logo-caption">developer & tinkerer</span></span></a>
+      <div class="nav-links"><a href="index.html#work">Work</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a><button id="termBtn" class="term-btn" aria-label="Open terminal">&gt;_</button><button class="theme-toggle" id="themeToggle" aria-label="Switch to light theme">light</button></div>
     </nav>
 
-    <main>
-      <div class="card">
-        <h2>gear</h2>
-        <div class="project">
-          <div class="project-title">pc</div>
-          <div class="project-desc">windows + void linux</div>
-        </div>
-        <div class="project">
-          <div class="project-title">flipper zero</div>
-          <div class="project-desc">dual esp32-c5, sub-ghz, rf</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>software</h2>
-        <div class="project">
-          <div class="project-title">editor</div>
-          <div class="project-desc">cursor</div>
-        </div>
-        <div class="project">
-          <div class="project-title">languages</div>
-          <div class="project-desc">python, c#, js/ts, sql</div>
-        </div>
-        <div class="project">
-          <div class="project-title">vcs</div>
-          <div class="project-desc">git, gh cli</div>
-        </div>
-      </div>
+    <main id="main">
+      <header class="subpage-heading"><p class="eyebrow">Wyatt / uses</p><h1>My setup</h1><p>The hardware and software behind the experiments.</p></header>
+<div class="detail-grid"><section class="card"><h2>Hardware</h2><div class="setup-item"><span class="setup-icon" aria-hidden="true">⌘</span><div><h3>My PC</h3><p>Windows + Void Linux</p><span class="setup-note">Two environments to build and experiment in.</span></div></div><div class="setup-item"><span class="setup-icon" aria-hidden="true">⌁</span><div><h3>Flipper Zero</h3><p>Dual ESP32-C5</p><span class="setup-note">Sub-GHz and RF experiments.</span></div></div></section><section class="card"><h2>Software</h2><div class="setup-item"><span class="setup-icon" aria-hidden="true">&gt;_</span><div><h3>Cursor</h3><p>My editor</p></div></div><div class="setup-item"><span class="setup-icon" aria-hidden="true">↗</span><div><h3>Git + GitHub CLI</h3><p>Version control</p></div></div></section></div><section class="card"><h2>Languages I reach for</h2><div class="toolbox-tags"><span>Python</span><span>C#</span><span>JavaScript</span><span>TypeScript</span><span>SQL</span></div><a href="skills.html" class="text-link">How I got here ↗</a></section>
     </main>
 
-    <div class="footer-clock" id="footerClock"></div>
-
-    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.7rem; color: var(--text-dim);">
-      <a href="tollsec.html" style="color: var(--bg);">.</a>
-    </div>
+    <footer class="site-footer"><span>© <span id="footerYear">2026</span> Wyatt Bombara</span><div><a href="index.html">Home</a><a href="settings.html">Settings</a></div><span class="local-clock"><span id="footerClock"></span> / your local time</span></footer>
   </div>
 
   <script src="script.js"></script>

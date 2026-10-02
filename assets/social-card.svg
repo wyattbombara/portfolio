@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#111211"/>
+  <rect x="62" y="55" width="52" height="52" rx="12" fill="#d4ef84"/>
+  <text x="69" y="94" font-family="Segoe UI,sans-serif" font-size="38" font-weight="700" letter-spacing="-4" fill="#18200d">w.</text>
+  <text x="130" y="89" font-family="Segoe UI,sans-serif" font-size="24" font-weight="600" fill="#f0f1e9">wyatt</text>
+  <path d="M62 140H1138M62 540H1138" stroke="#2c302b"/>
+  <text x="62" y="208" font-family="Consolas,monospace" font-size="13" letter-spacing="2" fill="#92998c">DEVELOPER &amp; TINKERER</text>
+  <text x="58" y="307" font-family="Segoe UI,sans-serif" font-size="80" font-weight="600" letter-spacing="-5" fill="#f0f1e9">curiosity,</text>
+  <text x="58" y="398" font-family="Segoe UI,sans-serif" font-size="80" font-weight="600" letter-spacing="-5" fill="#f0f1e9">turned into <tspan fill="#d4ef84">code.</tspan></text>
+  <text x="62" y="462" font-family="Segoe UI,sans-serif" font-size="20" fill="#b2b7ac">Web tools. Self-hosted AI. Whatever comes next.</text>
+  <g fill="none" stroke="#d4ef84" opacity=".4"><ellipse cx="953" cy="332" rx="145" ry="60" transform="rotate(-35 953 332)"/><ellipse cx="953" cy="332" rx="145" ry="60" transform="rotate(35 953 332)"/><ellipse cx="953" cy="332" rx="60" ry="145"/></g>
+  <circle cx="953" cy="332" r="145" fill="none" stroke="#343a31" stroke-dasharray="2 8"/>
+  <g transform="rotate(-9 953 332)"><rect x="903" y="282" width="100" height="100" rx="21" fill="#d4ef84"/><text x="914" y="353" fill="#18200d" font-family="Segoe UI,sans-serif" font-size="75" font-weight="700" letter-spacing="-8">w.</text></g>
+  <circle cx="1075" cy="249" r="5" fill="#d4ef84"/>
+  <text x="62" y="584" font-family="Consolas,monospace" font-size="13" fill="#92998c">WYATT BOMBARA</text>
+  <text x="1138" y="584" text-anchor="end" font-family="Consolas,monospace" font-size="13" fill="#92998c">wyattbombara.github.io/portfolio</text>
+</svg>

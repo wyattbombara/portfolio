@@ -1,0 +1,10 @@
+{
+  "name": "wyatt-portfolio",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/site.test.cjs"
+  },
+  "devDependencies": {
+    "jsdom": "26.1.0"
+  }
+}
