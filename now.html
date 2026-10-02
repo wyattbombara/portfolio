@@ -4,44 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark light">
-  <meta name="theme-color" content="#090909">
+  <meta name="theme-color" content="#111211">
   <meta name="description" content="what I'm up to right now — Wyatt">
   <title>now - Wyatt</title>
   <meta property="og:title" content="now — Wyatt">
   <meta property="og:description" content="what i'm up to">
   <meta property="og:url" content="https://wyattbombara.github.io/portfolio/now.html">
   <meta property="og:type" content="website">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>W</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script src="theme-init.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
   <div class="page">
-    <nav>
-      <a href="index.html" class="logo">wyatt</a>
-      <div class="nav-links">
-        <button id="termBtn" class="term-btn">terminal</button>
-        <button class="theme-toggle" id="themeToggle">light</button>
-      </div>
+    <nav aria-label="Main navigation">
+      <a href="index.html" class="logo" aria-label="Wyatt, home"><span class="logo-mark" aria-hidden="true">w.</span><span>wyatt<span class="logo-caption">developer & tinkerer</span></span></a>
+      <div class="nav-links"><a href="index.html#work">Work</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a><button id="termBtn" class="term-btn" aria-label="Open terminal">&gt;_</button><button class="theme-toggle" id="themeToggle" aria-label="Switch to light theme">light</button></div>
     </nav>
 
-    <main>
-      <div class="card" style="text-align: center;">
-        <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; transition: color 0.3s;">now</div>
-        <p style="color: var(--text-muted); font-size: 0.88rem;">not working on anything rn</p>
-      </div>
+    <main id="main">
+      <header class="subpage-heading"><p class="eyebrow">Wyatt / now</p><h1>Now</h1><p>Current interests, and what comes next.</p></header>
 
-      <div class="card">
-        <h2>future</h2>
-        <div class="path sub" style="margin-bottom: 0.5rem;">network+ cert</div>
-        <div class="path sub">security+ cert</div>
-      </div>
+      <section class="card now-card"><p class="eyebrow"><span class="accent-dot" aria-hidden="true"></span> Between projects</p><h2 class="display-heading">Room for the next idea.</h2><p class="page-description">Nothing on the workbench right now. Still curious about what comes next.</p><a href="index.html#work" class="text-link">See what I’ve built ↗</a></section>
+      <section class="card"><h2>On my radar</h2><ol class="simple-list"><li><span class="list-number">01</span><div><h3>Network+</h3><p>Next steps in networking.</p></div><span class="list-label">Planned</span></li><li><span class="list-number">02</span><div><h3>Security+</h3><p>Taking the security side further.</p></div><span class="list-label">Planned</span></li></ol></section>
     </main>
 
-    <div class="footer-clock" id="footerClock"></div>
-
-    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.7rem; color: var(--text-dim);">
-      <a href="tollsec.html" style="color: var(--bg);">.</a>
-    </div>
+    <footer class="site-footer"><span>© <span id="footerYear">2026</span> Wyatt Bombara</span><div><a href="index.html">Home</a><a href="settings.html">Settings</a></div><span class="local-clock"><span id="footerClock"></span> / your local time</span></footer>
   </div>
 
   <script src="script.js"></script>

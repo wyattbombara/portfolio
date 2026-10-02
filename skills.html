@@ -4,42 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark light">
-  <meta name="theme-color" content="#090909">
+  <meta name="theme-color" content="#111211">
   <meta name="description" content="dev path and skills — Wyatt">
   <title>skills - Wyatt</title>
   <meta property="og:title" content="skills — Wyatt">
   <meta property="og:description" content="dev path and skills">
   <meta property="og:url" content="https://wyattbombara.github.io/portfolio/skills.html">
   <meta property="og:type" content="website">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>W</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script src="theme-init.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
   <div class="page">
-    <nav>
-      <a href="index.html" class="logo">wyatt</a>
-      <div class="nav-links">
-        <button id="termBtn" class="term-btn">terminal</button>
-        <button class="theme-toggle" id="themeToggle">light</button>
-      </div>
+    <nav aria-label="Main navigation">
+      <a href="index.html" class="logo" aria-label="Wyatt, home"><span class="logo-mark" aria-hidden="true">w.</span><span>wyatt<span class="logo-caption">developer & tinkerer</span></span></a>
+      <div class="nav-links"><a href="index.html#work">Work</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a><button id="termBtn" class="term-btn" aria-label="Open terminal">&gt;_</button><button class="theme-toggle" id="themeToggle" aria-label="Switch to light theme">light</button></div>
     </nav>
 
-    <main>
-      <div class="card">
-        <div class="path">started with <span>Python</span></div>
-        <div class="path">then <span>C#</span></div>
-        <div class="path">...led to <span>.NET</span></div>
-        <div class="path sub">from there <span>Node</span>, <span>Git</span>, <span>Linux</span>, <span>JS</span></div>
-        <div class="path" style="margin-top: 1rem;">also <span>SQL</span></div>
-        <div class="path sub">which led to <span>APIs</span>, <span>WebSockets</span>, <span>Networking</span></div>
-      </div>
+    <main id="main">
+      <header class="subpage-heading"><p class="eyebrow">Wyatt / skills</p><h1>The learning path</h1><p>One language led to another. I’m still following the thread.</p></header>
+<section class="card"><h2>How I got here</h2><ol class="learning-path"><li><span class="journey-number">01</span><div><h3>Python</h3><p class="journey-title">Where it started.</p><p>The first language in my development path.</p></div></li><li><span class="journey-number">02</span><div><h3>C# & .NET</h3><p class="journey-title">Going a little deeper.</p><p>From C# into the .NET ecosystem.</p></div></li><li><span class="journey-number">03</span><div><h3>The web & infrastructure</h3><p class="journey-title">Connecting the pieces.</p><p>Node.js, JavaScript, Git, and Linux.</p></div></li><li><span class="journey-number">04</span><div><h3>SQL & networking</h3><p class="journey-title">Under the hood.</p><p>Databases, APIs, WebSockets, and the networks connecting them.</p></div></li></ol></section><section class="card"><h2>Still learning</h2><p class="page-description">Every project opens another door. My setup changes with what I’m building.</p><a href="uses.html" class="text-link">See my everyday tools ↗</a></section>
     </main>
 
-    <div class="footer-clock" id="footerClock"></div>
-
-    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.7rem; color: var(--text-dim);">
-      <a href="tollsec.html" style="color: var(--bg);">.</a>
-    </div>
+    <footer class="site-footer"><span>© <span id="footerYear">2026</span> Wyatt Bombara</span><div><a href="index.html">Home</a><a href="settings.html">Settings</a></div><span class="local-clock"><span id="footerClock"></span> / your local time</span></footer>
   </div>
 
   <script src="script.js"></script>

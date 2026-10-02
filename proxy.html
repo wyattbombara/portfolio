@@ -4,14 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark light">
-  <meta name="theme-color" content="#090909">
+  <meta name="theme-color" content="#111211">
   <meta name="description" content="barebones web proxy — Wyatt">
   <title>proxy — Wyatt</title>
   <meta property="og:title" content="proxy — Wyatt">
   <meta property="og:description" content="barebones web proxy">
   <meta property="og:url" content="https://wyattbombara.github.io/portfolio/proxy.html">
   <meta property="og:type" content="website">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>W</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script src="theme-init.js"></script>
   <link rel="stylesheet" href="style.css">
   <style>
     .proxy-bar {
@@ -42,37 +43,32 @@
       height: 60vh;
       border: 1px solid var(--border-light);
       border-radius: 6px;
-      background: #fff;
+      background: var(--card-bg);
     }
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
   <div class="page">
-    <nav>
-      <a href="index.html" class="logo">wyatt</a>
-      <div class="nav-links">
-        <button id="termBtn" class="term-btn">terminal</button>
-        <button class="theme-toggle" id="themeToggle">light</button>
-      </div>
+    <nav aria-label="Main navigation">
+      <a href="index.html" class="logo" aria-label="Wyatt, home"><span class="logo-mark" aria-hidden="true">w.</span><span>wyatt<span class="logo-caption">developer & tinkerer</span></span></a>
+      <div class="nav-links"><a href="index.html#work">Work</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a><button id="termBtn" class="term-btn" aria-label="Open terminal">&gt;_</button><button class="theme-toggle" id="themeToggle" aria-label="Switch to light theme">light</button></div>
     </nav>
 
-    <main>
+    <main id="main">
+      <header class="subpage-heading"><p class="eyebrow">Wyatt / proxy</p><h1>Web proxy</h1><p>A small browser experiment.</p></header>
       <div class="card">
         <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem;">proxy</div>
         <div class="proxy-bar">
-          <input type="text" id="proxyUrl" placeholder="enter URL..." autocomplete="off" spellcheck="false">
+          <input type="text" id="proxyUrl" aria-label="Website URL" placeholder="enter URL..." autocomplete="off" spellcheck="false">
           <button class="btn" id="proxyGo">go</button>
         </div>
-        <iframe id="proxyFrame" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
-        <div style="font-size: 0.7rem; color: var(--text-dim); margin-top: 0.5rem; text-align: center;">backend: tms proxy</div>
+        <iframe id="proxyFrame" title="Proxy browser" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+        <p class="page-description" style="margin-top: 16px; font-size: 11px;">An embedded browsing experiment. Some websites won’t work inside this viewer.</p>
       </div>
     </main>
 
-    <div class="footer-clock" id="footerClock"></div>
-
-    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.7rem; color: var(--text-dim);">
-      <a href="tollsec.html" style="color: var(--bg);">.</a>
-    </div>
+    <footer class="site-footer"><span>© <span id="footerYear">2026</span> Wyatt Bombara</span><div><a href="index.html">Home</a><a href="settings.html">Settings</a></div><span class="local-clock"><span id="footerClock"></span> / your local time</span></footer>
   </div>
 
   <script>

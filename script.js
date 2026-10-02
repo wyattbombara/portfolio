@@ -1,457 +1,385 @@
-// --- config ---
-const _ = [49, 48, 57, 57, 56, 49, 56, 56, 49, 55, 57, 51, 52, 51, 51, 49, 57, 49, 52].map(c => String.fromCharCode(c)).join('');
-const DISCORD_ID = _;
-
-// --- settings init ---
+// Preferences are optional: the portfolio also works with storage disabled.
+const memoryPreferences = new Map();
+function getPreference(key, fallback = null) {
+  if (memoryPreferences.has(key)) return memoryPreferences.get(key);
+  try { return localStorage.getItem(key) ?? fallback; }
+  catch (_) { return memoryPreferences.get(key) ?? fallback; }
+}
+function setPreference(key, value) {
+  memoryPreferences.set(key, value);
+  try { localStorage.setItem(key, value); } catch (_) { /* Use this session's preference. */ }
+}
+const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
 const settings = {
-  navMode: localStorage.getItem('navMode') || 'terminal',
-  particles: localStorage.getItem('particles') !== 'off',
-  visitorEnabled: localStorage.getItem('visitorEnabled') !== 'off',
+  navMode: getPreference('navMode', 'terminal'),
+  particles: getPreference('particles', 'on') !== 'off',
+  visitorEnabled: getPreference('visitorEnabled', 'on') !== 'off',
 };
 
-// --- nav mode ---
-(function() {
-  if (settings.navMode !== 'tabs') return;
+const sunIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>';
+const moonIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 15.2A8.5 8.5 0 0 1 8.8 4a8.5 8.5 0 1 0 11.2 11.2Z"/></svg>';
+function applyTheme(theme) {
+  const light = theme === 'light';
+  document.documentElement.dataset.theme = light ? 'light' : 'dark';
+  document.querySelectorAll('#themeToggle').forEach(button => {
+    button.innerHTML = light ? moonIcon : sunIcon;
+    button.setAttribute('aria-label', `Switch to ${light ? 'dark' : 'light'} theme`);
+    button.title = light ? 'Dark theme' : 'Light theme';
+  });
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', light ? '#f4f5ee' : '#111211');
+  const guestbook = document.getElementById('cusdis_thread');
+  if (guestbook) {
+    guestbook.dataset.theme = light ? 'light' : 'dark';
+    window.CUSDIS?.renderTo(guestbook);
+  }
+  document.querySelectorAll('[data-setting="theme"]').forEach(button => {
+    const active = button.dataset.value === theme;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+}
+function buildNavigation() {
   const container = document.querySelector('.nav-links');
   if (!container) return;
-  container.innerHTML = '';
-  const cats = [
-    { label: 'about', pages: [{ n: 'now', p: 'now.html' }, { n: 'uses', p: 'uses.html' }] },
-    { label: 'abilities', pages: [{ n: 'skills', p: 'skills.html' }, { n: 'accomplishments', p: 'accomplishments.html' }] },
-    { label: 'interact', pages: [{ n: 'guestbook', p: 'guestbook.html' }, { n: 'pentest', p: 'pentest.html' }, { n: 'proxy', p: 'proxy.html' }, { n: 'settings', p: 'settings.html' }] },
-  ];
-  for (const cat of cats) {
-    const btn = document.createElement('button');
-    btn.className = 'nav-cat';
-    btn.innerHTML = `${cat.label}<span class="nav-cat-arrow">&#9662;</span>`;
-    const drop = document.createElement('div');
-    drop.className = 'nav-cat-drop';
-    for (const pg of cat.pages) {
-      const a = document.createElement('a');
-      a.href = pg.p;
-      a.textContent = pg.n;
-      drop.appendChild(a);
-    }
-    btn.appendChild(drop);
-    container.appendChild(btn);
+  const home = document.body.classList.contains('home-page') ? '' : 'index.html';
+  container.innerHTML = `<a href="${home}#work">Work</a><a href="${home}#about">About</a><a href="${home}#contact">Contact</a>`;
+  if (getPreference('navMode', 'terminal') === 'tabs') {
+    const menu = document.createElement('details');
+    menu.className = 'page-menu';
+    menu.innerHTML = '<summary>Explore</summary><div class="menu-panel"></div>';
+    const pages = [['Now', 'now.html'], ['Setup', 'uses.html'], ['Skills', 'skills.html'], ['Accomplishments', 'accomplishments.html'], ['Guestbook', 'guestbook.html'], ['Security', 'pentest.html'], ['Proxy', 'proxy.html'], ['Settings', 'settings.html']];
+    pages.forEach(([name, href]) => {
+      const link = document.createElement('a');
+      link.href = href;
+      link.textContent = name;
+      menu.querySelector('.menu-panel').append(link);
+    });
+    menu.addEventListener('keydown', event => { if (event.key === 'Escape') { menu.open = false; menu.querySelector('summary').focus(); } });
+    container.append(menu);
+  } else {
+    const button = document.createElement('button');
+    button.id = 'termBtn';
+    button.className = 'term-btn';
+    button.textContent = '>_';
+    button.setAttribute('aria-label', 'Open terminal');
+    button.title = 'Open terminal (Ctrl / ⌘ + K)';
+    container.append(button);
   }
   const toggle = document.createElement('button');
-  toggle.className = 'theme-toggle';
   toggle.id = 'themeToggle';
-  toggle.textContent = 'light';
-  container.appendChild(toggle);
-})();
+  toggle.className = 'theme-toggle';
+  container.append(toggle);
+  container.querySelectorAll('a').forEach(link => { if (link.getAttribute('href') === location.pathname.split('/').pop()) link.setAttribute('aria-current', 'page'); });
+  applyTheme(getPreference('theme', 'dark'));
+}
+buildNavigation();
+document.addEventListener('click', event => {
+  if (event.target.closest('#themeToggle')) {
+    const theme = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+    setPreference('theme', theme);
+    applyTheme(theme);
+  }
+  document.querySelectorAll('.page-menu[open]').forEach(menu => {
+    if (!menu.contains(event.target)) menu.open = false;
+  });
+});
 
-// --- lanyard websocket ---
-let ws;
+document.querySelectorAll('[data-copy-target]').forEach(button => {
+  button.addEventListener('click', async () => {
+    const target = document.getElementById(button.dataset.copyTarget);
+    const status = button.closest('.key-card')?.querySelector('.copy-status');
+    if (!target) return;
+    try {
+      await navigator.clipboard.writeText(target.textContent.trim());
+      if (status) status.textContent = 'Public key copied.';
+    } catch (_) {
+      target.closest('details').open = true;
+      if (status) status.textContent = 'Copy unavailable. Select the key above to copy it manually.';
+    }
+  });
+});
 
-function setStatus(status, label) {
+function escapeHtml(value) {
+  const node = document.createElement('span');
+  node.textContent = String(value ?? '');
+  return node.innerHTML;
+}
+function safeImageUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' ? url.href : '';
+  } catch (_) { return ''; }
+}
+function fmtTime(milliseconds) {
+  const seconds = Math.floor(Math.max(0, Number(milliseconds) || 0) / 1000);
+  return Math.floor(seconds / 60) + ':' + String(seconds % 60).padStart(2, '0');
+}
+
+// Lanyard presence. One heartbeat and one progress timer per page.
+const DISCORD_ID = '1099818817934331914';
+let ws, heartbeat, reconnectTimer, progressTimer;
+let reconnectDelay = 5000;
+let pageClosing = false;
+function setStatus(status, label = status) {
   const dot = document.querySelector('.status-dot');
   if (!dot) return;
-  dot.className = 'status-dot ' + (status || 'offline');
-  dot.title = 'discord: ' + (label || 'offline');
+  const state = ['online', 'idle', 'dnd', 'offline'].includes(status) ? status : 'offline';
+  dot.className = 'status-dot ' + state;
+  dot.title = 'Discord: ' + label;
+  dot.setAttribute('aria-label', 'Discord: ' + label);
 }
-
-function connectLanyard() {
-  if (ws) ws.close();
-  setStatus('offline', 'connecting...');
-  ws = new WebSocket('wss://api.lanyard.rest/socket');
-
-  ws.onopen = () => {
-    ws.send(JSON.stringify({ op: 2, d: { subscribe_to_id: DISCORD_ID } }));
-  };
-
-  ws.onmessage = (e) => {
-    const msg = JSON.parse(e.data);
-    if (msg.op === 0) {
-      updateUI(msg.d);
-    }
-  };
-
-  ws.onclose = () => {
-    setStatus('offline', 'offline');
-    setTimeout(connectLanyard, 5000);
-  };
-}
-
-function updateUI(data) {
-  setStatus(data.discord_status || 'offline', data.discord_status || 'offline');
-  const spotifyEl = document.getElementById('spotify');
-  if (spotifyEl) {
-    const game = data.activities?.find(a => a.type === 0);
-    let html = '';
-    if (data.spotify) {
-      const s = data.spotify;
-      html = `
-        <div class="spotify-row">
-          <div class="spotify-cover">
-            <img src="${s.album_art_url}" alt="" width="110" height="110">
-          </div>
-          <div class="spotify-body">
-            <div class="spotify-text">
-              <span class="spotify-icon playing">&#9835;</span>
-              <strong>${s.song}</strong> &middot; ${s.artist}
-            </div>
-            <div class="spotify-bar" data-start="${s.timestamps.start}" data-end="${s.timestamps.end}">
-              <div class="spotify-progress"></div>
-            </div>
-            <div class="spotify-times">
-              <span class="spotify-current">0:00</span>
-              <span class="spotify-duration">${fmtTime(s.timestamps.end - s.timestamps.start)}</span>
-            </div>
-          </div>
-        </div>
-      `;
-      updateProgress();
-    }
-    if (game) {
-      let imgUrl = '';
-      if (game.assets?.large_image && game.application_id) {
-        const img = game.assets.large_image;
-        if (img.startsWith('external:')) {
-          imgUrl = 'https://media.discordapp.net/external/' + encodeURIComponent(img.slice(9));
-        } else if (!img.startsWith('spotify:')) {
-          imgUrl = `https://cdn.discordapp.com/app-assets/${game.application_id}/${img}.png`;
-        }
-      }
-      if (!imgUrl) {
-        const icons = { 'ROBLOX': 'https://cdn.discordapp.com/app-icons/363445589247131668/f2b60e350a2097289b3b0b877495e55f.png' };
-        if (icons[game.name]) imgUrl = icons[game.name];
-      }
-      if (!imgUrl && game.application_id && !window._gameIcons?.[game.application_id]) {
-        if (!window._gameIcons) window._gameIcons = {};
-        fetch(`https://discord.com/api/v10/applications/${game.application_id}/rpc`)
-          .then(r => r.json()).then(d => {
-            if (d.icon) {
-              window._gameIcons[game.application_id] = `https://cdn.discordapp.com/app-icons/${game.application_id}/${d.icon}.png`;
-            }
-          }).catch(() => {});
-      }
-      if (!imgUrl) imgUrl = window._gameIcons?.[game.application_id];
-      const elapsed = game.timestamps ? Date.now() - game.timestamps.start : 0;
-      html += `
-        <div class="game-row">
-          ${imgUrl ? `<div class="spotify-cover"><img src="${imgUrl}" alt="" width="40" height="40" onerror="this.parentElement.innerHTML='<span class=game-icon>&#127918;</span>'"></div>` : `<div class="game-icon">&#127918;</div>`}
-          <div class="game-body">
-            <div class="game-name">${game.name}</div>
-            ${game.details ? `<div class="game-details">${game.details}${game.state ? ' &middot; ' + game.state : ''}</div>` : ''}
-          </div>
-          ${game.timestamps ? `<div class="game-clock" data-start="${game.timestamps.start}">${fmtTime(elapsed)}</div>` : ''}
-        </div>
-      `;
-    }
-    if (!data.spotify && !game) {
-      html = `
-        <span class="spotify-icon">&#9835;</span>
-        <span class="spotify-text">not playing anything</span>
-      `;
-    }
-    spotifyEl.innerHTML = html;
-  }
-}
-
-function fmtTime(ms) {
-  const s = Math.floor(ms / 1000);
-  return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
-}
-
 function updateProgress() {
   const bar = document.querySelector('.spotify-bar');
   if (bar) {
-    const start = parseInt(bar.dataset.start);
-    const end = parseInt(bar.dataset.end);
-    const elapsed = Date.now() - start;
-    const pct = Math.min((elapsed / (end - start)) * 100, 100);
-    bar.querySelector('.spotify-progress').style.width = pct + '%';
-    const cur = bar.parentElement.querySelector('.spotify-current');
-    if (cur) cur.textContent = fmtTime(elapsed);
+    const start = Number(bar.dataset.start), end = Number(bar.dataset.end);
+    const duration = Math.max(0, end - start);
+    const elapsed = Math.max(0, Math.min(Date.now() - start, duration));
+    bar.querySelector('.spotify-progress').style.width = (duration ? elapsed / duration * 100 : 0) + '%';
+    bar.parentElement.querySelector('.spotify-current').textContent = fmtTime(elapsed);
   }
-  const gc = document.querySelector('.game-clock');
-  if (gc) {
-    const start = parseInt(gc.dataset.start);
-    gc.textContent = fmtTime(Date.now() - start);
-  }
-  if (!document.hidden) requestAnimationFrame(updateProgress);
+  const clock = document.querySelector('.game-clock');
+  if (clock) clock.textContent = fmtTime(Date.now() - Number(clock.dataset.start));
 }
-
+function manageProgress() {
+  clearInterval(progressTimer);
+  if (!document.hidden && document.querySelector('.spotify-bar, .game-clock')) {
+    updateProgress();
+    progressTimer = setInterval(updateProgress, 1000);
+  }
+}
+function idleActivity(unavailable = false) {
+  const container = document.getElementById('spotify');
+  if (container) container.innerHTML = `<div class="activity-idle"><span class="music-note" aria-hidden="true">♫</span><span>${unavailable ? 'Activity unavailable.' : 'No music on right now.'}<small>${unavailable ? 'Check back in a little while.' : 'Probably exploring something else.'}</small></span></div>`;
+  manageProgress();
+}
+function updateUI(data) {
+  if (!data || typeof data !== 'object') return;
+  setStatus(data.discord_status || 'offline');
+  const container = document.getElementById('spotify');
+  if (!container) return;
+  const game = Array.isArray(data.activities) ? data.activities.find(activity => activity.type === 0) : null;
+  const spotify = data.spotify;
+  if (!spotify && !game) { idleActivity(); return; }
+  let html = '';
+  if (spotify) {
+    const art = safeImageUrl(spotify.album_art_url);
+    html = `<div class="spotify-row">${art ? `<div class="spotify-cover"><img src="${escapeHtml(art)}" alt="Album cover" width="48" height="48" referrerpolicy="no-referrer"></div>` : ''}<div class="spotify-body"><div class="spotify-text"><strong>${escapeHtml(spotify.song)}</strong><br>${escapeHtml(spotify.artist)}</div><div class="spotify-bar" data-start="${Number(spotify.timestamps?.start) || 0}" data-end="${Number(spotify.timestamps?.end) || 0}"><div class="spotify-progress"></div></div><div class="spotify-times"><span class="spotify-current">0:00</span><span>${fmtTime(spotify.timestamps?.end - spotify.timestamps?.start)}</span></div></div></div>`;
+  }
+  if (game) {
+    let image = '';
+    if (/^\d+$/.test(game.application_id) && /^\d+$/.test(game.assets?.large_image)) {
+      image = `https://cdn.discordapp.com/app-assets/${game.application_id}/${game.assets.large_image}.png`;
+    }
+    const started = Number(game.timestamps?.start);
+    html += `<div class="game-row">${image ? `<div class="spotify-cover"><img src="${image}" alt="" width="40" height="40"></div>` : '<div class="game-icon" aria-hidden="true">⌘</div>'}<div class="game-body"><div class="game-name">${escapeHtml(game.name)}</div>${game.details ? `<div class="game-details">${escapeHtml(game.details)}${game.state ? ' · ' + escapeHtml(game.state) : ''}</div>` : ''}</div>${started > 0 ? `<div class="game-clock" data-start="${started}">${fmtTime(Date.now() - started)}</div>` : ''}</div>`;
+  }
+  container.innerHTML = html;
+  container.querySelectorAll('img').forEach(image => image.addEventListener('error', () => image.parentElement.remove(), {once:true}));
+  manageProgress();
+}
+function connectLanyard() {
+  if (pageClosing || !document.querySelector('.status-dot, #spotify')) return;
+  clearTimeout(reconnectTimer);
+  setStatus('offline', 'connecting');
+  try { ws = new WebSocket('wss://api.lanyard.rest/socket'); }
+  catch (_) { idleActivity(true); return; }
+  ws.onmessage = event => {
+    let message;
+    try { message = JSON.parse(event.data); } catch (_) { return; }
+    if (message.op === 1) {
+      reconnectDelay = 5000;
+      const sendHeartbeat = () => { if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({op:3})); };
+      clearInterval(heartbeat);
+      sendHeartbeat();
+      heartbeat = setInterval(sendHeartbeat, Math.max(1000, Number(message.d?.heartbeat_interval) || 30000));
+      ws.send(JSON.stringify({op:2, d:{subscribe_to_id:DISCORD_ID}}));
+    } else if (message.op === 0) { updateUI(message.d); }
+  };
+  ws.onclose = () => {
+    clearInterval(heartbeat);
+    setStatus('offline', 'unavailable');
+    idleActivity(true);
+    if (!pageClosing) {
+      reconnectTimer = setTimeout(connectLanyard, reconnectDelay);
+      reconnectDelay = Math.min(reconnectDelay * 2, 60000);
+    }
+  };
+}
 connectLanyard();
 
-// theme toggle
-const toggle = document.getElementById('themeToggle');
-if (toggle) {
-  const saved = localStorage.getItem('theme');
-  if (saved === 'light') {
-    document.documentElement.setAttribute('data-theme', 'light');
-    toggle.textContent = 'dark';
-  }
-
-  const cusdis = document.querySelector('#cusdis_thread');
-  if (cusdis) cusdis.setAttribute('data-theme', saved === 'light' ? 'light' : 'dark');
-
-  toggle.addEventListener('click', () => {
-    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-    if (isLight) {
-      document.documentElement.removeAttribute('data-theme');
-      toggle.textContent = 'light';
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.setAttribute('data-theme', 'light');
-      toggle.textContent = 'dark';
-      localStorage.setItem('theme', 'light');
-    }
-    const cusdis = document.querySelector('#cusdis_thread');
-    if (cusdis) {
-      cusdis.setAttribute('data-theme', isLight ? 'dark' : 'light');
-      if (window.CUSDIS) window.CUSDIS.renderTo(cusdis);
-    }
-  });
-}
-
-// typing effect
-const el = document.getElementById('typing-text');
-if (el) {
-  const phrases = [
-    'breaking things for fun',
-    'hacktivist at heart',
-    'probably pentesting something',
-    'probably doing something sketchy',
-    'prob coding an exploit',
-    'automating the boring stuff',
-    'making computers do what I want',
-    'writing code that probably works',
-    'figuring it out as I go',
-    "for legal reasons, that's a joke",
-    'doing stuff, idk yet',
-    'probably should be sleeping',
-    'I do stuff sometimes',
-    "not sure what I'm doing, but it's fine",
-  ];
-  let pi = Math.floor(Math.random() * phrases.length), ci = 0, deleting = false;
-
+// A small bit of personality; the primary introduction is always readable.
+const typingElement = document.getElementById('typing-text');
+let typingTimer;
+function startTyping() {
+  clearTimeout(typingTimer);
+  if (!typingElement) return;
+  const phrases = ['making computers do what I want', 'automating the boring stuff', 'figuring it out as I go', 'probably should be sleeping'];
+  if (motionPreference.matches) { typingElement.textContent = phrases[0]; return; }
+  let phrase = 0, character = phrases[0].length, deleting = true;
+  typingElement.textContent = phrases[0];
   function type() {
-    const text = phrases[pi];
-    if (!deleting) {
-      el.textContent = text.slice(0, ci + 1);
-      ci++;
-      if (ci === text.length) {
-        setTimeout(() => { deleting = true; setTimeout(type, 300); }, 2000);
-        return;
-      }
-      setTimeout(type, 60);
-    } else {
-      el.textContent = text.slice(0, ci - 1);
-      ci--;
-      if (ci === 0) {
-        deleting = false;
-        let np;
-        do { np = Math.floor(Math.random() * phrases.length); } while (np === pi);
-        pi = np;
-        setTimeout(type, 200);
-        return;
-      }
-      setTimeout(type, 30);
-    }
+    if (document.hidden) { typingTimer = setTimeout(type, 1000); return; }
+    const text = phrases[phrase];
+    character += deleting ? -1 : 1;
+    typingElement.textContent = text.slice(0, character);
+    if (!deleting && character === text.length) {
+      deleting = true;
+      typingTimer = setTimeout(type, 3500);
+    } else if (deleting && character === 0) {
+      deleting = false;
+      phrase = (phrase + 1) % phrases.length;
+      typingTimer = setTimeout(type, 350);
+    } else { typingTimer = setTimeout(type, deleting ? 30 : 65); }
   }
-  type();
+  typingTimer = setTimeout(type, 3500);
 }
+startTyping();
 
-// visit counter
 const counter = document.getElementById('visitorCount');
 if (counter) {
-  if (!settings.visitorEnabled) {
-    counter.style.display = 'none';
-  } else {
-    const key = 'visits';
-    let count = localStorage.getItem(key);
-    count = count ? parseInt(count) + 1 : 1;
-    localStorage.setItem(key, count);
-    counter.textContent = 'visits: ' + count;
+  counter.hidden = !settings.visitorEnabled;
+  if (settings.visitorEnabled) {
+    const previous = Number(getPreference('visits', '0'));
+    const count = (Number.isFinite(previous) && previous >= 0 ? previous : 0) + 1;
+    setPreference('visits', String(count));
+    counter.textContent = 'your visits: ' + count;
   }
 }
-
-// footer clock
-const clockEl = document.getElementById('footerClock');
-if (clockEl) {
-  function updateClock() {
-    const now = new Date();
-    clockEl.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  }
-  updateClock();
-  setInterval(updateClock, 10000);
+const clockElement = document.getElementById('footerClock');
+function updateClock() {
+  if (clockElement) clockElement.textContent = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
 }
+updateClock();
+if (clockElement) setInterval(updateClock, 10000);
+const yearElement = document.getElementById('footerYear');
+if (yearElement) yearElement.textContent = new Date().getFullYear();
 
-// particle background
-let particleAnimId = null;
-
+// Quiet background particles, paused in hidden tabs and omitted for reduced motion.
+let particleAnimation = null, particleResize = null;
+function stopParticles() {
+  if (particleAnimation !== null) cancelAnimationFrame(particleAnimation);
+  particleAnimation = null;
+  if (particleResize) removeEventListener('resize', particleResize);
+  particleResize = null;
+  document.getElementById('particle-canvas')?.remove();
+}
 function startParticles() {
-  if (particleAnimId) cancelAnimationFrame(particleAnimId);
-  const old = document.getElementById('particle-canvas');
-  if (old) old.remove();
-  const c = document.createElement('canvas');
-  c.id = 'particle-canvas';
-  document.body.prepend(c);
-  const ctx = c.getContext('2d');
-  let particles = [];
-  const COUNT = 60;
-
-  function resize() { c.width = innerWidth; c.height = innerHeight; }
-  resize();
-  addEventListener('resize', resize);
-
-  for (let i = 0; i < COUNT; i++) {
-    particles.push({
-      x: Math.random() * c.width,
-      y: Math.random() * c.height,
-      r: Math.random() * 2 + 1,
-      dy: Math.random() * 0.3 + 0.1,
-      o: Math.random() * 0.5 + 0.1,
-    });
-  }
-
+  stopParticles();
+  if (motionPreference.matches || document.hidden || getPreference('particles', 'on') === 'off') return;
+  const canvas = document.createElement('canvas');
+  canvas.id = 'particle-canvas';
+  canvas.setAttribute('aria-hidden', 'true');
+  document.body.prepend(canvas);
+  const context = canvas.getContext('2d');
+  if (!context) { canvas.remove(); return; }
+  particleResize = () => { canvas.width = innerWidth; canvas.height = innerHeight; };
+  particleResize();
+  addEventListener('resize', particleResize);
+  const particles = Array.from({length:35}, () => ({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()+.5,dy:Math.random()*.25+.08}));
   function draw() {
-    if (document.hidden) { particleAnimId = null; return; }
-    ctx.clearRect(0, 0, c.width, c.height);
-    for (const p of particles) {
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(200,200,200,${p.o})`;
-      ctx.fill();
-      p.y += p.dy;
-      if (p.y > c.height + 5) { p.y = -5; p.x = Math.random() * c.width; }
+    context.clearRect(0,0,canvas.width,canvas.height);
+    context.fillStyle = document.documentElement.dataset.theme === 'light' ? '#526d22' : '#d4ef84';
+    for (const particle of particles) {
+      context.beginPath();context.arc(particle.x,particle.y,particle.r,0,Math.PI*2);context.fill();
+      particle.y += particle.dy;
+      if (particle.y > canvas.height + 4) { particle.y = -4; particle.x = Math.random()*canvas.width; }
     }
-    particleAnimId = requestAnimationFrame(draw);
+    particleAnimation = requestAnimationFrame(draw);
   }
   draw();
 }
-
+startParticles();
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) return;
-  if (document.getElementById('particle-canvas') && !particleAnimId) startParticles();
-  const bar = document.querySelector('.spotify-bar');
-  if (bar) updateProgress();
+  if (document.hidden) stopParticles(); else { startParticles(); updateClock(); }
+  manageProgress();
+});
+motionPreference.addEventListener('change', () => { startTyping(); startParticles(); });
+window.addEventListener('pagehide', () => {
+  pageClosing = true;
+  clearTimeout(reconnectTimer); clearInterval(heartbeat); clearInterval(progressTimer);
+  clearTimeout(typingTimer); stopParticles(); ws?.close();
+});
+window.addEventListener('pageshow', event => {
+  if (event.persisted) { pageClosing = false; connectLanyard(); startParticles(); startTyping(); manageProgress(); }
 });
 
-function stopParticles() {
-  const c = document.getElementById('particle-canvas');
-  if (c) c.remove();
-  if (particleAnimId) cancelAnimationFrame(particleAnimId);
-}
-
-if (settings.particles) startParticles();
-
-// terminal navigation
+// The original command-based navigation, with dialog semantics and keyboard support.
 (function() {
-  const btn = document.getElementById('termBtn');
-  if (!btn) return;
-
   const pages = {
-    home: { path: 'index.html', desc: 'go to the home page' },
-    index: { path: 'index.html', desc: 'go to the home page' },
-    now: { path: 'now.html', desc: 'what i\'m up to right now' },
-    uses: { path: 'uses.html', desc: 'gear and software i use' },
-    skills: { path: 'skills.html', desc: 'dev path and skills' },
-    accomplishments: { path: 'accomplishments.html', desc: 'things i\'ve done' },
-    guestbook: { path: 'guestbook.html', desc: 'sign the guestbook' },
-    pentest: { path: 'pentest.html', desc: 'pen testing experience' },
-    proxy: { path: 'proxy.html', desc: 'barebones web proxy' },
-    settings: { path: 'settings.html', desc: 'configure the site' },
+    home:{path:'index.html',desc:'go to the home page'}, index:{path:'index.html',desc:'go to the home page'},
+    now:{path:'now.html',desc:'what I’m up to'}, uses:{path:'uses.html',desc:'gear and software'},
+    skills:{path:'skills.html',desc:'my learning path'}, accomplishments:{path:'accomplishments.html',desc:'things I’ve done'},
+    guestbook:{path:'guestbook.html',desc:'leave a note'}, pentest:{path:'pentest.html',desc:'security experiments'},
+    proxy:{path:'proxy.html',desc:'web proxy'}, settings:{path:'settings.html',desc:'configure the site'},
+    tms:{path:'tms.html',desc:'web platform project'}, ai:{path:'school-ai.html',desc:'self-hosted AI project'},
   };
-
+  const extra = {help:{desc:'show commands'},banner:{desc:'show the banner'},about:{desc:'about this site'},date:{desc:'current date and time'},whoami:{desc:'show current user'},'whois wyatt':{desc:'bio for the site owner'},clear:{desc:'clear the terminal'},exit:{desc:'close the terminal'},ls:{desc:'list pages'},cd:{desc:'go to a page (cd now)'},neofetch:{desc:'system info'}};
   let cwd = 'home';
   const HOME = 'home';
-
-  const extra = {
-    help: { desc: 'show this help' },
-    banner: { desc: 'show the banner' },
-    about: { desc: 'about this site' },
-    date: { desc: 'current date and time' },
-    whoami: { desc: 'show current user' },
-    'whois wyatt': { desc: 'bio for the site owner' },
-    clear: { desc: 'clear the terminal' },
-    exit: { desc: 'close the terminal' },
-    ls: { desc: 'list pages' },
-    cd: { desc: 'go to a page (cd now)' },
-    neofetch: { desc: 'system info' },
-  };
-
-  function promptHtml() {
-    return `<span class="prompt">wyatt@portfolio:~${cwd === HOME ? '' : '/' + cwd}</span>`;
+  const history = [];
+  let historyIndex = 0, draft = '', previousFocus;
+  function promptHtml() { return `<span class="prompt">wyatt@portfolio:~${cwd === HOME ? '' : '/' + cwd}</span>`; }
+  const overlay = document.createElement('div');
+  overlay.className = 'term-overlay'; overlay.id = 'termOverlay';
+  overlay.innerHTML = `<div class="term-window" role="dialog" aria-modal="true" aria-labelledby="terminalTitle" aria-describedby="terminalHint"><div class="term-header"><span class="term-dot" aria-hidden="true"></span><span class="term-dot" aria-hidden="true"></span><span class="term-dot" aria-hidden="true"></span><span class="term-title" id="terminalTitle">wyatt@portfolio:~</span><button class="term-close" type="button" aria-label="Close terminal">esc ×</button></div><div class="term-output" id="termOutput" role="log" aria-live="polite" aria-relevant="additions"><div class="dim" id="terminalHint">Welcome to my corner of the web. Type <span class="highlight">help</span> to explore.<br>↑ ↓ command history · Esc to close</div></div><div class="term-input-line"><span class="prompt" id="termPrompt">wyatt@portfolio:~</span><label class="sr-only" for="termInput">Terminal command</label><input type="text" class="term-input" id="termInput" autocomplete="off" autocapitalize="off" spellcheck="false"></div></div>`;
+  document.body.append(overlay);
+  const input = overlay.querySelector('#termInput'), output = overlay.querySelector('#termOutput');
+  const closeButton = overlay.querySelector('.term-close'), page = document.querySelector('.page');
+  function openTerm() {
+    if (overlay.classList.contains('open')) return;
+    previousFocus = document.activeElement;
+    overlay.classList.add('open');
+    if (page) page.inert = true;
+    document.body.style.overflow = 'hidden';
+    input.focus();
   }
-
-  function buildOverlay() {
-    const overlay = document.createElement('div');
-    overlay.className = 'term-overlay';
-    overlay.id = 'termOverlay';
-    overlay.innerHTML = `
-      <div class="term-window">
-        <div class="term-header">
-          <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span>
-          <span class="term-title">wyatt@portfolio:~</span>
-        </div>
-        <div class="term-output" id="termOutput">
-          <div class="dim">welcome to wyatt's portfolio — type <span class="highlight">help</span> to get started</div>
-        </div>
-        <div class="term-input-line">
-          <span class="prompt" id="termPrompt">$</span>
-          <input type="text" class="term-input" id="termInput" autocomplete="off" spellcheck="false" autofocus>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(overlay);
-
-    const input = overlay.querySelector('#termInput');
-    const output = overlay.querySelector('#termOutput');
-
-    overlay.addEventListener('click', (e) => {
-      if (e.target === overlay) closeTerm();
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && overlay.classList.contains('open')) closeTerm();
-    });
-
-    function closeTerm() {
-      overlay.classList.remove('open');
-      input.blur();
+  function closeTerm() {
+    overlay.classList.remove('open');
+    if (page) page.inert = false;
+    document.body.style.overflow = '';
+    if (previousFocus?.isConnected) previousFocus.focus();
+  }
+  closeButton.addEventListener('click', closeTerm);
+  overlay.addEventListener('click', event => { if (event.target === overlay) closeTerm(); });
+  document.addEventListener('click', event => { if (event.target.closest('#termBtn')) openTerm(); });
+  document.addEventListener('keydown', event => {
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); openTerm(); }
+    if (!overlay.classList.contains('open')) return;
+    if (event.key === 'Escape') { event.preventDefault(); closeTerm(); }
+    if (event.key === 'Tab') {
+      if (event.shiftKey && document.activeElement === closeButton) { event.preventDefault(); input.focus(); }
+      else if (!event.shiftKey && document.activeElement === input) { event.preventDefault(); closeButton.focus(); }
     }
-
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        const cmd = input.value.trim().toLowerCase();
-        const line = document.createElement('div');
-        line.innerHTML = `${promptHtml()} ${escapeHtml(input.value.trim())}`;
-        output.appendChild(line);
-        input.value = '';
-        processCmd(cmd, output);
-        const p = document.getElementById('termPrompt');
-        if (p) p.innerHTML = promptHtml();
-        output.scrollTop = output.scrollHeight;
-      }
-    });
-
-    btn.addEventListener('click', () => {
-      overlay.classList.add('open');
-      setTimeout(() => input.focus(), 100);
-    });
-  }
-
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s;
-    return d.innerHTML;
-  }
-
-  function processCmd(cmd, output) {
+  });
+  input.addEventListener('keydown', event => {
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      event.preventDefault();
+      if (historyIndex === history.length) draft = input.value;
+      historyIndex = Math.max(0, Math.min(history.length, historyIndex + (event.key === 'ArrowUp' ? -1 : 1)));
+      input.value = historyIndex === history.length ? draft : history[historyIndex];
+    }
+    if (event.key !== 'Enter') return;
+    event.preventDefault();
+    const value = input.value.trim();
+    if (!value) return;
+    const line = document.createElement('div');
+    line.innerHTML = `${promptHtml()} ${escapeHtml(value)}`;
+    output.append(line);
+    history.push(value); historyIndex = history.length; draft = ''; input.value = '';
+    processCmd(value.toLowerCase(), output);
+    document.getElementById('termPrompt').innerHTML = promptHtml();
+    output.scrollTop = output.scrollHeight;
+  });
+    function processCmd(cmd, output) {
     if (!cmd) return;
 
     const parts = cmd.split(/\s+/);
     const main = parts[0];
 
     if (main === 'help') {
-      const maxLen = Math.max(...Object.keys(pages).map(n => n.length));
-      const row = (n, d) => `<div>&nbsp;&nbsp;<span class="highlight">${n}</span>${'&nbsp;'.repeat(maxLen - n.length + 2)}${d}</div>`;
+      const row = (name, description) => `<div class="command-row"><span class="highlight">${name}</span><span>${description}</span></div>`;
       const groups = [
-        { title: 'navigation', cmds: ['ls', 'cd', 'home', 'index', 'now', 'uses', 'skills', 'accomplishments', 'guestbook', 'pentest', 'proxy', 'settings'] },
+        { title: 'navigation', cmds: ['ls', 'cd', 'home', 'index', 'now', 'uses', 'skills', 'accomplishments', 'guestbook', 'pentest', 'proxy', 'settings', 'tms', 'ai'] },
         { title: 'system', cmds: ['whoami', 'whois wyatt', 'neofetch', 'date'] },
         { title: 'misc', cmds: ['about', 'banner', 'help', 'clear', 'exit'] },
       ];
@@ -467,7 +395,7 @@ if (settings.particles) startParticles();
     } else if (main === 'clear') {
       output.innerHTML = '';
     } else if (main === 'exit' || main === 'close') {
-      document.getElementById('termOverlay').classList.remove('open');
+      closeTerm();
     } else if (main === 'whoami') {
       addOutput('user@portfolio');
     } else if (main === 'whois' || main === 'bio') {
@@ -538,5 +466,5 @@ if (settings.particles) startParticles();
     }
   }
 
-  buildOverlay();
+
 })();
